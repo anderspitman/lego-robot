@@ -1,2 +1,0 @@
-#!/usr/bin/env sh
-dot -Tpng concept_map.dot -o concept_map.png
