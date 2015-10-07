@@ -2,7 +2,7 @@ function [ initialVelocity, timeOfFlight ] = offensive...
     ( launchAngle, projectileWeight, dragCoefficient)
 
 solveFunc = @(u) [xoff(u(1), launchAngle, projectileWeight,...
-                       dragCoefficient, u(2)) - 5000
+                       dragCoefficient, u(2)) - X_OFFSET
                   yoff(u(1), launchAngle, projectileWeight,...
                        dragCoefficient, u(2))];
 
@@ -17,12 +17,13 @@ offensivePlot(initialVelocity, launchAngle, projectileWeight,...
 
 end
 
+
 function offensivePlot(initialVelocity, launchAngle, projectileWeight,...
                        dragCoefficient, timeOfFlight)
- 
-NUM_SAMPLES = 1000;
-             
+              
 times = linspace(0, timeOfFlight, NUM_SAMPLES);
+xvals = zeros(NUM_SAMPLES);
+yvals = zeros(NUM_SAMPLES);
 
 for i=1:numel(times)
     xvals(i) = xoff(initialVelocity, launchAngle, projectileWeight,...
@@ -36,6 +37,20 @@ grid on;
 title('Trajectory of Projectile for Offensive System');
 ylabel('Y Coordinate (ft)');
 xlabel('X Coordinate (ft)');
-axis([0 5000 0 1600]);
+axis([0 X_PLOT_MAX 0 Y_PLOT_MAX]);
 
+end
+
+% Simulate constants with functions
+function [xOffset] = X_OFFSET()
+xOffset = 5000;
+end
+function [yPlotMax] = Y_PLOT_MAX()
+yPlotMax = 1600;
+end
+function [xPlotMax] = X_PLOT_MAX()
+xPlotMax = X_OFFSET();
+end
+function [numSamples] = NUM_SAMPLES()
+numSamples = 1000;
 end
