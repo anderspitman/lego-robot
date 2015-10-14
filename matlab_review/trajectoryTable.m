@@ -19,13 +19,14 @@ function trajectoryTable(...
 end
 
 function printHeader()
-    fprintf('%s    %s  %s    %s\n', 'Time', 'X Coordinate', 'Y Coordinate',...
+    fprintf('\n %s    %s  %s    %s\n', 'Time', 'X Coordinate', 'Y Coordinate',...
         'Velocity');
-    fprintf('-----------------------------------------------------------\n');
+    fprintf('-----------------------------------------------\n');
 end
 
 function printLine(time, x, y, velocity)
 
-    fprintf('%4.1f    %7.2f    %6.2f    %7.2f\n', time, x, y, velocity);
+    fprintf(' %4.1f       %7.2f        %6.2f       %7.2f\n', time, x, y,...
+        velocity);
 
 end
