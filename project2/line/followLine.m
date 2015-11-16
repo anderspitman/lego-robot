@@ -10,8 +10,8 @@ COLOR_LINE = 2; %blue
 COLOR_INTERACT = 5; %red
 COLOR_BG = 6; %white
 
-DRIVEPOWER = 40;
-IDLEPOWER = 20;
+DRIVEPOWER = 50;
+IDLEPOWER = 35;
 
 % FIXME: error check
 brick.setSensorColorFull(COLORPORT)
@@ -24,8 +24,8 @@ while true
         %steer right
         brick.motorForward(MOTORLEFT, DRIVEPOWER);
         brick.motorReverse(MOTORRIGHT, IDLEPOWER);
-    elseif (brick.sensorValue(COLORPORT) == COLOR_INTERACT)
-        %interact
+    %elseif (brick.sensorValue(COLORPORT) == COLOR_INTERACT)
+    %    %interact
     elseif (brick.sensorValue(COLORPORT) == COLOR_BG)
         brick.motorReverse(MOTORLEFT, IDLEPOWER);
         brick.motorForward(MOTORRIGHT, DRIVEPOWER);
