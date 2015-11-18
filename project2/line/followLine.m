@@ -10,8 +10,8 @@ COLOR_LINE = 2; %blue
 COLOR_INTERACT = 5; %red
 COLOR_BG = 6; %white
 
-DRIVEPOWER = 50;
-IDLEPOWER = 35;
+DRIVEPOWER = 30;
+IDLEPOWER = 20;
 
 % FIXME: error check
 brick.setSensorColorFull(COLORPORT)
