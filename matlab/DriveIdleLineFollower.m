@@ -1,16 +1,14 @@
 classdef DriveIdleLineFollower < LineFollower
 
-    properties (GetAccess=private)
-        drivePower
-        idlePower
+    properties (Constant)
+        DRIVE_POWER_PERCENT = 30;
+        IDLE_POWER_PERCENT = 20;
     end
 
     methods
         function obj = DriveIdleLineFollower(robot)
             obj@LineFollower(robot);
 
-            obj.drivePower = 30;
-            obj.idlePower = 20;
         end
 
         function followLine(obj)
@@ -46,13 +44,17 @@ classdef DriveIdleLineFollower < LineFollower
         end
 
         function curveLeft(obj)
-            obj.robot.leftMotorForward(obj.drivePower);
-            obj.robot.rightMotorReverse(obj.idlePower);
+            obj.robot.leftMotorForward(...
+                DriveIdleLineFollower.DRIVE_POWER_PERCENT);
+            obj.robot.rightMotorReverse(...
+                DriveIdleLineFollower.IDLE_POWER_PERCENT);
         end
 
         function curveRight(obj)
-            obj.robot.leftMotorReverse(obj.idlePower);
-            obj.robot.rightMotorForward(obj.drivePower);
+            obj.robot.leftMotorReverse(...
+                DriveIdleLineFollower.IDLE_POWER_PERCENT);
+            obj.robot.rightMotorForward(...
+                DriveIdleLineFollower.DRIVE_POWER_PERCENT);
         end
     end
 end

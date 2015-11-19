@@ -1,7 +1,7 @@
 classdef LegoRobot < Robot
 
     properties (Constant)
-        ADDRESS = '0016530BAFBE';
+        BLUETOOTH_ADDRESS = '0016530BAFBE';
         COLOR_PORT = lego.NXT.IN_1;
         COLOR_LINE = lego.NXT.SENSOR_TYPE_COLORBLUE;
         COLOR_INTERACT = lego.NXT.SENSOR_TYPE_COLORRED;
@@ -13,7 +13,7 @@ classdef LegoRobot < Robot
 
     methods
         function obj = LegoRobot()
-            obj.brick = lego.NXT(LegoRobot.ADDRESS);
+            obj.brick = lego.NXT(LegoRobot.BLUETOOTH_ADDRESS);
             obj.brick.setSensorColorFull(LegoRobot.COLOR_PORT);
         end
 
