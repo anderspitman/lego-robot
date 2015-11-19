@@ -1,0 +1,2 @@
+classdef Robot < RobotInterface
+end
