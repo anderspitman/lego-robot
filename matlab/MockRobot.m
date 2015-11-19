@@ -1,4 +1,4 @@
-classdef MockRobot < RobotInterface
+classdef MockRobot < Robot
 
     properties (Access=private)
         m_getPositionStateCalled = false;
@@ -11,7 +11,7 @@ classdef MockRobot < RobotInterface
 
     methods
         function obj = MockRobot()
-            obj.positionState = RobotInterface.STATE_OFF_LINE;
+            obj.positionState = Robot.STATE_OFF_LINE;
         end
 
         function state = getPositionState(obj)

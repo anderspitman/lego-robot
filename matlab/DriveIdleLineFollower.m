@@ -1,30 +1,16 @@
-classdef DriveIdleLineFollower < handle
-    properties (Constant)
-        SIDE_LEFT = 0;
-        SIDE_RIGHT = 1;
-    end
+classdef DriveIdleLineFollower < LineFollower
 
     properties (GetAccess=private)
-        robot
-        side
         drivePower
         idlePower
     end
 
     methods
         function obj = DriveIdleLineFollower(robot)
-            obj.robot = robot;
-            obj.side = DriveIdleLineFollower.SIDE_LEFT;
+            obj@LineFollower(robot);
+
             obj.drivePower = 30;
             obj.idlePower = 20;
-        end
-
-        function side = getSide(obj)
-            side = obj.side;
-        end
-
-        function setSide(obj, side)
-            obj.side = side;
         end
 
         function followLine(obj)
@@ -36,25 +22,25 @@ classdef DriveIdleLineFollower < handle
         function iterate(obj)
             positionState = obj.robot.getPositionState();
 
-            if positionState == RobotInterface.STATE_ON_LINE
+            if positionState == Robot.STATE_ON_LINE
                 obj.curveAwayFromLine();
-            elseif positionState == RobotInterface.STATE_OFF_LINE
+            elseif positionState == Robot.STATE_OFF_LINE
                 obj.curveTowardLine();
             end
         end
 
         function curveAwayFromLine(obj)
-            if obj.side == DriveIdleLineFollower.SIDE_LEFT
+            if obj.side == LineFollower.SIDE_LEFT
                 obj.curveLeft();
-            elseif obj.side == DriveIdleLineFollower.SIDE_RIGHT
+            elseif obj.side == LineFollower.SIDE_RIGHT
                 obj.curveRight();
             end
         end
 
         function curveTowardLine(obj)
-            if obj.side == DriveIdleLineFollower.SIDE_LEFT
+            if obj.side == LineFollower.SIDE_LEFT
                 obj.curveRight();
-            elseif obj.side == DriveIdleLineFollower.SIDE_RIGHT
+            elseif obj.side == LineFollower.SIDE_RIGHT
                 obj.curveLeft();
             end
         end
