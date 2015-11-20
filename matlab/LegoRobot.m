@@ -3,12 +3,16 @@ classdef LegoRobot < Robot
     properties (Constant)
         BLUETOOTH_ADDRESS = '0016530BAFBE';
         COLOR_PORT = lego.NXT.IN_1;
-        COLOR_LINE = lego.NXT.SENSOR_TYPE_COLORBLUE;
-        COLOR_INTERACT = lego.NXT.SENSOR_TYPE_COLORRED;
-        COLOR_BACKGROUND = lego.NXT.SENSOR_TYPE_LIGHT_INACTIVE; % white
+        COLOR_LINE = 2; % BLUE (lego.NXT.SENSOR_TYPE_COLORBLUE;)
+        COLOR_INTERACT = 5; % RED (lego.NXT.SENSOR_TYPE_COLORRED;)
+        COLOR_BACKGROUND = 6; % WHITE (lego.NXT.SENSOR_TYPE_LIGHT_INACTIVE;)
 
         LEFT_MOTOR_PORT = lego.NXT.OUT_A;
         RIGHT_MOTOR_PORT = lego.NXT.OUT_C;
+    end
+    
+    properties (Access=private)
+        brick
     end
 
     methods
@@ -27,6 +31,7 @@ classdef LegoRobot < Robot
                 positionState = Robot.STATE_OFF_LINE;
             else
                 fprintf('Not processing color %d\n', color);
+                positionState = Robot.STATE_INVALID;
             end
         end
 

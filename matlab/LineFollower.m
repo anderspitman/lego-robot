@@ -12,7 +12,7 @@ classdef LineFollower < handle
 
     methods(Static)
         function newLineFollower = makeLineFollower(type, robot)
-            if type == 'drive_idle'
+            if strcmp(type, 'drive_idle')
                 newLineFollower = DriveIdleLineFollower(robot);
             end
         end

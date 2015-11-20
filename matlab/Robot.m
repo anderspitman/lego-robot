@@ -4,6 +4,7 @@ classdef (Abstract) Robot < handle
         STATE_ON_LINE = 0;
         STATE_OFF_LINE = 1;
         STATE_ON_INTERACTION = 2;
+        STATE_INVALID = 3;
     end
 
     methods (Abstract)
