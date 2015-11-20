@@ -20,6 +20,8 @@ classdef LineFollower < handle
 
     methods(Abstract)
         followLine(obj)
+        followLineToInteraction(obj)
+        findLine(obj)
     end
 
     methods
