@@ -9,6 +9,9 @@ classdef (Abstract) Robot < handle
 
     methods (Abstract)
         getPositionState(obj)
+        allStop(obj)
+        shutdown(obj)
+        rotate(obj, angleDegrees, powerPercent)
         leftMotorForward(obj, powerPercent)
         leftMotorReverse(obj, powerPercent)
         rightMotorForward(obj, powerPercent)

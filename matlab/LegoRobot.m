@@ -20,6 +20,15 @@ classdef LegoRobot < Robot
             obj.brick = lego.NXT(LegoRobot.BLUETOOTH_ADDRESS);
             obj.brick.setSensorColorFull(LegoRobot.COLOR_PORT);
         end
+        
+        function shutdown(obj)
+            obj.brick.close()
+        end
+        
+        function allStop(obj)
+            obj.brick.motorBrake(LegoRobot.LEFT_MOTOR_PORT);
+            obj.brick.motorBrake(LegoRobot.RIGHT_MOTOR_PORT);
+        end
 
         function positionState = getPositionState(obj)
             color = obj.brick.sensorValue(LegoRobot.COLOR_PORT);
@@ -49,6 +58,13 @@ classdef LegoRobot < Robot
 
         function rightMotorReverse(obj, powerPercent)
             obj.brick.motorReverse(LegoRobot.RIGHT_MOTOR_PORT, powerPercent);
+        end
+        
+        function rotate(obj, angleDegrees, powerPercent)
+            degreesPerSecond
+            if angleDegrees >= 0
+            else
+            end
         end
     end
 end

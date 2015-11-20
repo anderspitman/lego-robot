@@ -14,7 +14,19 @@ classdef CourseTraverser < handle
         
         function traverse(obj)
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
-            obj.lineFollower.followLine();
+            obj.lineFollower.followLineToInteraction();
+            
+            
+            obj.doFirstInteraction();
+            obj.robot.allStop();
+            %obj.robot.shutdown();
+        end
+        
+        function doFirstInteraction(obj)
+            obj.robot.rightMotorReverse(50);
+            obj.robot.leftMotorReverse(50);
+            pause(.5);
+            obj.robot.rotate(90);
         end
     end
 end

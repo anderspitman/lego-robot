@@ -16,12 +16,22 @@ classdef DriveIdleLineFollower < LineFollower
                 obj.iterate();
             end
         end
+        
+        function followLineToInteraction(obj)
+            foundInteraction = false;
+           
+            while ~foundInteraction
+                foundInteraction = obj.iterate();
+            end
+        end
 
-        function iterate(obj)
+        function foundInteraction = iterate(obj)
+            foundInteraction = false;
             positionState = obj.robot.getPositionState();
-
             if positionState == Robot.STATE_ON_LINE
                 obj.curveAwayFromLine();
+            elseif positionState == Robot.STATE_ON_INTERACTION
+                foundInteraction = true;
             elseif positionState == Robot.STATE_OFF_LINE
                 obj.curveTowardLine();
             end
