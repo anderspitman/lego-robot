@@ -81,41 +81,55 @@ classdef CourseTraverser < handle
             pause(.5);
         end
         
-        function timeToLine = measureTimeToLine(obj)
-            speed = 1;
-            positionState = obj.robot.getPositionState();
-            tic;
-            while positionState ~= Robot.STATE_ON_INTERACTION
-                obj.robot.straightForwardRegulated(speed);
-                positionState = obj.robot.getPositionState();
-            end
-            timeToLine = toc;
+        function timeThroughLineAvg = measureTimeToLine(obj)
             
-            % undo movement
-            obj.robot.straightReverseRegulated(speed);
-            pause(timeToLine*1.1)
+            numToAverage = 1;
+            for i = 1:numToAverage
+                speed = 2;
+                positionState = obj.robot.getPositionState();
+
+                tic;
+                while positionState ~= Robot.STATE_ON_INTERACTION
+                    obj.robot.straightForwardRegulated(speed);
+                    positionState = obj.robot.getPositionState();
+                end
+                timeToLine = toc;
+
+                tic;
+                while positionState == Robot.STATE_ON_INTERACTION
+                    obj.robot.straightForwardRegulated(speed);
+                    positionState = obj.robot.getPositionState();
+                end
+
+                timeThroughLine(i) = toc;
+
+                % undo movement
+                obj.robot.straightReverseRegulated(speed);
+                pause((timeToLine + timeThroughLine(i)))
+            end
+            timeThroughLineAvg = sum(timeThroughLine) / numToAverage;
             obj.robot.allStop();
         end
         
-        function distanceToLine = measureDistanceToLine(obj)
-            speed = 15;
-            degreesStep = 3;
-            positionState = obj.robot.getPositionState();
-            
-            degreesCount = 0;
-            while positionState ~= Robot.STATE_ON_INTERACTION
-                obj.robot.moveDegrees(degreesStep, speed);
-                degreesCount = degreesCount + degreesStep;
-                positionState = obj.robot.getPositionState();
-            end
-            
-            % undo movement
-            for i = 1:degreesCount
-                obj.robot.moveDegrees(-degreesStep, speed);
-            end
-            
-            distanceToLine = degreesCount;
-        end
+%         function distanceToLine = measureDistanceToLine(obj)
+%             speed = 15;
+%             degreesStep = 3;
+%             positionState = obj.robot.getPositionState();
+%             
+%             degreesCount = 0;
+%             while positionState ~= Robot.STATE_ON_INTERACTION
+%                 obj.robot.moveDegrees(degreesStep, speed);
+%                 degreesCount = degreesCount + degreesStep;
+%                 positionState = obj.robot.getPositionState();
+%             end
+%             
+%             % undo movement
+%             for i = 1:degreesCount
+%                 obj.robot.moveDegrees(-degreesStep, speed);
+%             end
+%             
+%             distanceToLine = degreesCount;
+%         end
         
         function backOffLine(obj)
             positionState = obj.robot.getPositionState();
@@ -134,7 +148,7 @@ classdef CourseTraverser < handle
         
         function back1CM(obj)
             obj.robot.straightReverseRegulated(10);
-            pause(.5);
+            pause(.3);
         end
         
         function forwardToInteractionLine(obj)
