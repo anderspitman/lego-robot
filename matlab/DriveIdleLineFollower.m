@@ -1,8 +1,8 @@
 classdef DriveIdleLineFollower < LineFollower
 
     properties (Constant)
-        DRIVE_POWER_PERCENT = 12;
-        IDLE_POWER_PERCENT = 8;
+        DRIVE_POWER_PERCENT = 30;
+        IDLE_POWER_PERCENT = 20;
     end
 
     methods

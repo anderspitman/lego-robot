@@ -14,6 +14,8 @@ classdef LegoRobot < Robot
         MOTOR_POWER_PERCENT = 20;
         
         CENTIMETERS_PER_SECOND = 7.5;
+        DEGREES_ROTATE_PER_SECOND = 64;
+        ROTATE_TIME_PERCENT_POWER = 20;
         
         TIRE_DIAMETER_CENTIMETERS = 4.3;
         TIRE_RADIUS_CENTIMETERS = LegoRobot.TIRE_DIAMETER_CENTIMETERS / 2;
@@ -38,8 +40,7 @@ classdef LegoRobot < Robot
         end
         
         function allStop(obj)
-            obj.brick.motorBrake(LegoRobot.LEFT_MOTOR_PORT);
-            obj.brick.motorBrake(LegoRobot.RIGHT_MOTOR_PORT);
+            obj.brick.motorBrake(LegoRobot.BOTH_MOTOR_PORTS);
         end
 
         function positionState = getPositionState(obj)
@@ -57,79 +58,93 @@ classdef LegoRobot < Robot
         end
 
         function leftMotorForward(obj, powerPercent)
-            obj.brick.motorForwardReg(LegoRobot.LEFT_MOTOR_PORT, powerPercent);
+            obj.brick.motorForwardReg(LegoRobot.LEFT_MOTOR_PORT,...
+                                      powerPercent);
         end
 
         function rightMotorForward(obj, powerPercent)
-            obj.brick.motorForwardReg(LegoRobot.RIGHT_MOTOR_PORT, powerPercent);
+            obj.brick.motorForwardReg(LegoRobot.RIGHT_MOTOR_PORT,...
+                                      powerPercent);
         end
 
         function leftMotorReverse(obj, powerPercent)
-            obj.brick.motorReverseReg(LegoRobot.LEFT_MOTOR_PORT, powerPercent);
+            obj.brick.motorReverseReg(LegoRobot.LEFT_MOTOR_PORT,...
+                                      powerPercent);
         end
 
         function rightMotorReverse(obj, powerPercent)
-            obj.brick.motorReverseReg(LegoRobot.RIGHT_MOTOR_PORT, powerPercent);
+            obj.brick.motorReverseReg(LegoRobot.RIGHT_MOTOR_PORT,...
+                                      powerPercent);
         end
         
         function straightForward(obj, powerPercent)
-            %obj.brick.motorForwardReg(LegoRobot.BOTH_MOTOR_PORTS, powerPercent);
-            obj.brick.motorForwardSync(LegoRobot.BOTH_MOTOR_PORTS, powerPercent,...
-                                       100);
+            obj.brick.motorForwardReg(LegoRobot.BOTH_MOTOR_PORTS,...
+                                      powerPercent);
         end
         
         function straightBack(obj, powerPercent)
-            obj.brick.motorReverseReg(LegoRobot.BOTH_MOTOR_PORTS, powerPercent);
+            obj.brick.motorReverseReg(LegoRobot.BOTH_MOTOR_PORTS,...
+                                      powerPercent);
         end
         
-        function forwardCentimeters(obj, distanceCentimeters)
+        function forwardCentimetersDegrees(obj, distanceCentimeters,...
+                                           powerPercent)
             degrees = distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER;
             obj.brick.motorRotateExt(...
-                LegoRobot.BOTH_MOTOR_PORTS,LegoRobot.MOTOR_POWER_PERCENT,...
-                degrees, 0, false, true);
+                LegoRobot.BOTH_MOTOR_PORTS, powerPercent, degrees, 0, true,...
+                true);
         end
         
-        function reverseCentimeters(obj, distanceCentimeters)
+        function reverseCentimetersDegrees(obj, distanceCentimeters,...
+                                           powerPercent)
             degrees = ...
                 -(distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER);
             obj.brick.motorRotateExt(...
-                LegoRobot.BOTH_MOTOR_PORTS,LegoRobot.MOTOR_POWER_PERCENT,...
-                degrees, 0, false, true);
+                LegoRobot.BOTH_MOTOR_PORTS, powerPercent, degrees, 0, true,...
+                true);
         end
         
-        function pauseCentimeters(obj, distanceCentimeters)
+        function rotateDegrees(obj, angleDegrees, powerPercent)
+            tireDegreesPerRobotDegrees = 2;
+            tireAngle = angleDegrees * tireDegreesPerRobotDegrees;
+            if angleDegrees >= 0
+                turnPercent = 10;
+            else
+                turnPercent = -10;
+            end
+            obj.brick.motorRotateExt(LegoRobot.BOTH_MOTOR_PORTS,...
+                                     powerPercent, tireAngle,...
+                                     turnPercent, true, true);
+        end
+        
+        function forwardCentimetersTime(obj, distanceCentimeters)
+            obj.straightForward(LegoRobot.MOTOR_POWER_PERCENT);
+            obj.pauseCentimetersTime(distanceCentimeters);
+        end
+        
+        function reverseCentimetersTime(obj, distanceCentimeters)
+            obj.straightBack(LegoRobot.MOTOR_POWER_PERCENT);
+            obj.pauseCentimetersTime(distanceCentimeters);
+        end
+        
+        function pauseCentimetersTime(obj, distanceCentimeters)
             pauseTime = ...
                 distanceCentimeters / LegoRobot.CENTIMETERS_PER_SECOND;
             pause(pauseTime);
             obj.allStop();
         end
         
-        function rotate(obj, angleDegrees, powerPercent)
-            degreesPerSecond = 100;
+        function rotateTime(obj, angleDegrees)
             if angleDegrees >= 0
-                obj.rightMotorReverse(50);
-                obj.leftMotorForward(50);
+                obj.leftMotorReverse(LegoRobot.ROTATE_TIME_PERCENT_POWER);
+                obj.rightMotorForward(LegoRobot.ROTATE_TIME_PERCENT_POWER);
             else
-                obj.leftMotorReverse(50);
-                obj.rightMotorForward(50);
+                obj.rightMotorReverse(LegoRobot.ROTATE_TIME_PERCENT_POWER);
+                obj.leftMotorForward(LegoRobot.ROTATE_TIME_PERCENT_POWER);
             end
             
-            rotateTimeSeconds = abs(angleDegrees) / degreesPerSecond;
-            pause(rotateTimeSeconds);
-            obj.allStop();
-        end
-        
-        function rotateDegrees(obj, angleDegrees, powerPercent)
-            degreesPerSecond = 100;
-            
-            if angleDegrees >= 0
-                obj.brick.motorRotateExt(LegoRobot.BOTH_MOTOR_PORTS,...
-                                         powerPercent, 360, 0, true, false);
-            else
-                
-            end
-            
-            rotateTimeSeconds = abs(angleDegrees) / degreesPerSecond;
+            rotateTimeSeconds = ...
+                abs(angleDegrees) / LegoRobot.DEGREES_ROTATE_PER_SECOND;
             pause(rotateTimeSeconds);
             obj.allStop();
         end

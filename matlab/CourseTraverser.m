@@ -3,6 +3,7 @@ classdef CourseTraverser < handle
     properties(Access=private)
         robot
         lineFollower
+        fineLineFollower
     end
     
     methods
@@ -10,6 +11,7 @@ classdef CourseTraverser < handle
             obj.robot = LegoRobot();
             obj.lineFollower = LineFollower.makeLineFollower('drive_idle',...
                                                              obj.robot);
+            obj.fineLineFollower = FineLineFollower(obj.robot);
         end
         
         function traverse(obj)
@@ -17,7 +19,8 @@ classdef CourseTraverser < handle
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToInteraction();
             
-            %obj.doFirstInteraction();
+            %obj.fineLineFollower.followLineToInteraction();
+            obj.doFirstInteraction();
             
             %obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
             %obj.lineFollower.followLineToInteraction();
@@ -27,14 +30,13 @@ classdef CourseTraverser < handle
         end
         
         function doFirstInteraction(obj)
-            obj.robot.reverseCentimeters(15);
-            obj.robot.rotate(45);
-            obj.robot.forwardCentimeters(40);
-            %obj.robot.rotate(-45);
-            %obj.robot.forwardCentimeters(30);
-            %obj.robot.rotate(-45);
-            %obj.lineFollower.findLine();
-            
+            obj.robot.forwardCentimetersTime(20);
+            obj.robot.rotateTime(-90);
+            obj.robot.forwardCentimetersTime(35);
+            obj.robot.rotateTime(-100);
+            obj.robot.forwardCentimetersTime(40);
+            obj.robot.rotateTime(-90);
+            obj.robot.forwardCentimetersTime(20);
         end
     end
 end
