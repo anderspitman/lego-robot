@@ -1,7 +1,7 @@
 classdef CenterSensorLineFollower < LineFollower
     properties (Constant)
-        DRIVE_POWER_PERCENT = 10;
-        IDLE_POWER_PERCENT = 5;
+        DRIVE_POWER_PERCENT = 20;
+        IDLE_POWER_PERCENT = 15;
     end
 
     methods
@@ -24,11 +24,14 @@ classdef CenterSensorLineFollower < LineFollower
                 positionState = obj.robot.getPositionState();
                 
                 if positionState == Robot.STATE_ON_LINE
-                    obj.robot.reverseCentimetersTime(3);
-                    obj.robot.rotateTime(45);
+                    obj.robot.straightBack(60);
+                    pause(.1)
+                    obj.robot.leftMotorReverse(60);
+                    obj.robot.rightMotorForward(60);
+                    pause(.2)
                 elseif positionState == Robot.STATE_OFF_LINE
-                    obj.robot.leftMotorForward(30);
-                    obj.robot.rightMotorForward(1);
+                    obj.robot.leftMotorForward(60);
+                    obj.robot.rightMotorForward(20);
                 elseif positionState == Robot.STATE_ON_INTERACTION
                     foundInteraction = true;
                 end
