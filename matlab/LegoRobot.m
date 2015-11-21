@@ -7,15 +7,15 @@ classdef LegoRobot < Robot
         COLOR_INTERACT = 5; % RED (lego.NXT.SENSOR_TYPE_COLORRED;)
         COLOR_BACKGROUND = 6; % WHITE (lego.NXT.SENSOR_TYPE_LIGHT_INACTIVE;)
 
-        LEFT_MOTOR_PORT = lego.NXT.OUT_A;
-        RIGHT_MOTOR_PORT = lego.NXT.OUT_C;
-        BOTH_MOTOR_PORTS = lego.NXT.OUT_AC;
+        LEFT_MOTOR = lego.NXT.OUT_A;
+        RIGHT_MOTOR = lego.NXT.OUT_C;
+        BOTH_MOTORS = lego.NXT.OUT_AC;
         
-        MOTOR_POWER_PERCENT = 20;
+        MOTOR_POWER_PERCENT = 60;
         
-        CENTIMETERS_PER_SECOND = 7.5;
-        DEGREES_ROTATE_PER_SECOND = 64;
-        ROTATE_TIME_PERCENT_POWER = 20;
+        CENTIMETERS_PER_SECOND = 17.75;
+        DEGREES_ROTATE_PER_SECOND = 190;
+        ROTATE_TIME_PERCENT_POWER = 60;
         
         TIRE_DIAMETER_CENTIMETERS = 4.3;
         TIRE_RADIUS_CENTIMETERS = LegoRobot.TIRE_DIAMETER_CENTIMETERS / 2;
@@ -40,7 +40,7 @@ classdef LegoRobot < Robot
         end
         
         function allStop(obj)
-            obj.brick.motorBrake(LegoRobot.BOTH_MOTOR_PORTS);
+            obj.brick.motorBrake(LegoRobot.BOTH_MOTORS);
         end
 
         function positionState = getPositionState(obj)
@@ -52,46 +52,62 @@ classdef LegoRobot < Robot
             elseif color == LegoRobot.COLOR_BACKGROUND
                 positionState = Robot.STATE_OFF_LINE;
             else
-                fprintf('Not processing color %d\n', color);
+                %fprintf('Not processing color %d\n', color);
                 positionState = Robot.STATE_INVALID;
             end
         end
 
         function leftMotorForward(obj, powerPercent)
-            obj.brick.motorForward(LegoRobot.LEFT_MOTOR_PORT,...
-                                      powerPercent);
+            obj.brick.motorForward(LegoRobot.LEFT_MOTOR,...
+                                   powerPercent);
         end
 
         function rightMotorForward(obj, powerPercent)
-            obj.brick.motorForward(LegoRobot.RIGHT_MOTOR_PORT,...
-                                      powerPercent);
+            obj.brick.motorForward(LegoRobot.RIGHT_MOTOR,...
+                                   powerPercent);
         end
 
         function leftMotorReverse(obj, powerPercent)
-            obj.brick.motorReverse(LegoRobot.LEFT_MOTOR_PORT,...
-                                      powerPercent);
+            obj.brick.motorReverse(LegoRobot.LEFT_MOTOR,...
+                                   powerPercent);
         end
 
         function rightMotorReverse(obj, powerPercent)
-            obj.brick.motorReverse(LegoRobot.RIGHT_MOTOR_PORT,...
-                                      powerPercent);
+            obj.brick.motorReverse(LegoRobot.RIGHT_MOTOR,...
+                                   powerPercent);
+        end
+        
+        function motorForwardRegulated(obj, motorId, powerPercent)
+            obj.brick.motorForwardReg(motorId, powerPercent);
+        end
+        
+        function motorReverseRegulated(obj, motorId, powerPercent)
+            obj.brick.motorReverseReg(motorId, powerPercent);
         end
         
         function straightForward(obj, powerPercent)
-            obj.brick.motorForward(LegoRobot.BOTH_MOTOR_PORTS,...
-                                      powerPercent);
+            obj.brick.motorForward(LegoRobot.BOTH_MOTORS,...
+                                   powerPercent);
         end
         
         function straightBack(obj, powerPercent)
-            obj.brick.motorReverse(LegoRobot.BOTH_MOTOR_PORTS,...
-                                      powerPercent);
+            obj.brick.motorReverse(LegoRobot.BOTH_MOTORS,...
+                                   powerPercent);
+        end
+        
+        function straightForwardRegulated(obj, powerPercent)
+            obj.brick.motorForwardReg(LegoRobot.BOTH_MOTORS, powerPercent);
+        end
+        
+        function straightReverseRegulated(obj, powerPercent)
+            obj.brick.motorReverseReg(LegoRobot.BOTH_MOTORS, powerPercent);
         end
         
         function forwardCentimetersDegrees(obj, distanceCentimeters,...
                                            powerPercent)
             degrees = distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER;
             obj.brick.motorRotateExt(...
-                LegoRobot.BOTH_MOTOR_PORTS, powerPercent, degrees, 0, true,...
+                LegoRobot.BOTH_MOTORS, powerPercent, degrees, 0, true,...
                 true);
         end
         
@@ -100,7 +116,13 @@ classdef LegoRobot < Robot
             degrees = ...
                 -(distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER);
             obj.brick.motorRotateExt(...
-                LegoRobot.BOTH_MOTOR_PORTS, powerPercent, degrees, 0, true,...
+                LegoRobot.BOTH_MOTORS, powerPercent, degrees, 0, true,...
+                true);
+        end
+        
+        function moveDegrees(obj, degrees, powerPercent)
+            obj.brick.motorRotateExt(...
+                LegoRobot.BOTH_MOTORS, powerPercent, degrees, 0, true,...
                 true);
         end
         
@@ -112,7 +134,7 @@ classdef LegoRobot < Robot
             else
                 turnPercent = -10;
             end
-            obj.brick.motorRotateExt(LegoRobot.BOTH_MOTOR_PORTS,...
+            obj.brick.motorRotateExt(LegoRobot.BOTH_MOTORS,...
                                      powerPercent, tireAngle,...
                                      turnPercent, true, true);
         end

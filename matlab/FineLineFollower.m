@@ -1,7 +1,7 @@
 classdef FineLineFollower < LineFollower
     properties (Constant)
-        DRIVE_POWER_PERCENT = 20;
-        IDLE_POWER_PERCENT = 15;
+        DRIVE_POWER_PERCENT = 15;
+        IDLE_POWER_PERCENT = 10;
     end
 
     methods
