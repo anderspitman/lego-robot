@@ -128,16 +128,16 @@ classdef CourseTraverser < handle
         function orientToInteractionFollow(obj)
             %XXX: we assume the interactions are always on the left and
             % for simplicity
-            s = obj.getSide();
-            obj.setSide(LineFollower.SIDE_LEFT);
+            s = obj.lineFollower.getSide();
+            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
 
             %FIXME: calculate time to follow from distance
             % follow for a few seconds to straighten out the robot
             start = clock;
             while (etime (clock, start) <= 3)
-                obj.iterateInteraction();
+                obj.iterateInteractionLine();
             end
-            obj.setSide(s);
+            obj.lineFollower.setSide(s);
         end
         
         function iterateInteractionLine(obj)
