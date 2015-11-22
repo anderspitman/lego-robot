@@ -228,6 +228,29 @@ classdef CourseTraverser < handle
             end
         end
         
+        function crossOverLine(obj)
+            speed = 15;
+            % drive until we hit the line
+            % FIXME: add a failsafe in case we're already on or past the
+            % line, possibly backing up or bailing out after x seconds
+            while (obj.robot.getPositionState() ~= Robot.STATE_ON_LINE)
+                obj.robot.straightForwardRegulated(speed);
+            end
+            
+            % continue forward until we pass the line
+            while (obj.robot.getPositionState() ~= Robot.STATE_OFF_LINE)
+                obj.robot.straightForwardRegulated(speed);
+            end
+            
+            % flip the current side (and resume following the line)
+            s = LineFollower.SIDE_LEFT;
+            if s == obj.lineFollower.getSide()
+                obj.lineFollower.setSide(LineFollower.SIDE_RIGHT)
+            end
+            
+            obj.lineFollower.setSide(s);
+        end
+        
         function doFirstInteraction(obj)
             obj.robot.forwardCentimetersTime(20);
             obj.robot.rotateTime(-90);
