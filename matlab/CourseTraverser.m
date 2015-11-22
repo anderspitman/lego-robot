@@ -81,6 +81,74 @@ classdef CourseTraverser < handle
             pause(.5);
         end
         
+        function rotateCCWDegrees(obj, speed, degrees)
+            speedSecondsPerDegree = 50/90;
+            obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
+            obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
+            pause((degrees / speed) * speedSecondsPerDegree);
+            obj.robot.brake();
+        end
+        
+        function rotateCWDegrees(obj, speed, degrees)
+            speedSecondsPerDegree = 50/90;
+            obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, speed);
+            obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, speed);
+            pause((degrees / speed) * speedSecondsPerDegree);
+            obj.robot.brake();
+        end
+        
+        function orientToInteractionArmAlign(obj)
+            obj.robot.rotateCCWDegrees(80, 20);
+
+            obj.robot.forwardCentimetersDegrees(11, 20);
+            obj.robot.rotateCCWDegrees(20, 20);
+        end
+        
+        function orientToInteractionDistance(obj)
+            % right side mounted US sensor
+            minDistanceToTarget = 10;
+            aligned = false
+            while ~aligned
+                d = obj.robot.getDistanceState()
+                if d < 0
+                    % we're too far to the right (detecting nothing)
+                    % rotate CCW until we're facing something
+                    while (d < 0)
+                        obj.robot.rotateCCW();
+                        d = obj.robot.getDistanceState();
+                    end
+                elseif d < minDistanceToTarget
+                    % rotate a little more centered
+                    obj.robot.rotateCW();
+                    aligned = true;
+                end
+            end
+        end
+        
+        function orientToInteractionFollow(obj)
+            %XXX: we assume the interactions are always on the left and
+            % for simplicity
+            s = obj.getSide();
+            obj.setSide(LineFollower.SIDE_LEFT);
+
+            %FIXME: calculate time to follow from distance
+            % follow for a few seconds to straighten out the robot
+            start = clock;
+            while (etime (clock, start) <= 3)
+                obj.iterateInteraction();
+            end
+            obj.setSide(s);
+        end
+        
+        function iterateInteractionLine(obj)
+            positionState = obj.robot.getPositionState();
+            if positionState == Robot.STATE_ON_INTERACTION
+                obj.lineFollower.curveAwayFromLine();
+            else
+                obj.lineFollower.curveTowardLine();
+            end
+        end
+        
         function timeThroughLineAvg = measureTimeToLine(obj)
             
             numToAverage = 1;

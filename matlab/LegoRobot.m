@@ -6,6 +6,8 @@ classdef LegoRobot < Robot
         COLOR_LINE = 2; % BLUE (lego.NXT.SENSOR_TYPE_COLORBLUE;)
         COLOR_INTERACT = 5; % RED (lego.NXT.SENSOR_TYPE_COLORRED;)
         COLOR_BACKGROUND = 6; % WHITE (lego.NXT.SENSOR_TYPE_LIGHT_INACTIVE;)
+        
+        ULTRASONIC_PORT = lego.NXT.IN_2;
 
         LEFT_MOTOR = lego.NXT.OUT_A;
         RIGHT_MOTOR = lego.NXT.OUT_C;
@@ -33,6 +35,7 @@ classdef LegoRobot < Robot
         function obj = LegoRobot()
             obj.brick = lego.NXT(LegoRobot.BLUETOOTH_ADDRESS);
             obj.brick.setSensorColorFull(LegoRobot.COLOR_PORT);
+            obj.brick.setSensorUltrasonic(LegoRobot.ULTRASONIC_PORT);
         end
         
         function shutdown(obj)
@@ -41,6 +44,10 @@ classdef LegoRobot < Robot
         
         function allStop(obj)
             obj.brick.motorBrake(LegoRobot.BOTH_MOTORS);
+        end
+        
+        function distanceState = getDistanceState(obj)
+            distanceState = obj.brick.sensorValue(LegoRobot.ULTRASONIC_PORT);
         end
 
         function positionState = getPositionState(obj)
