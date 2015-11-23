@@ -13,6 +13,9 @@ classdef MockRobot < Robot
         forwardCentimetersTimeCalledWithValue
         reverseCentimetersTimeCalledWithValue
         rotateAngleTimeCalledWithValue
+        rotateTimeCalledWithValue
+        rotateClockwiseTimeCalledWithValue
+        rotateCounterClockwiseTimeCalledWithValue
     end
 
     methods
@@ -27,8 +30,108 @@ classdef MockRobot < Robot
         function wasCalled = getPositionStateCalled(obj)
             wasCalled = obj.m_getPositionStateCalled;
         end
+
         function setPositionState(obj, state)
             obj.positionState = state;
+        end
+
+        function straightForward(obj, powerPercent)
+        end
+        function straightForwardRegulated(obj, powerPercent)
+            obj.straightForwardRegulatedCalledWithValue = powerPercent;
+        end
+
+        function value = straightForwardRegulatedCalledWith(obj)
+            value = obj.straightForwardRegulatedCalledWithValue;
+        end
+
+        function straightReverse(obj, powerPercent)
+            obj.straighReverseCalledWithValue = powerPercent;
+        end
+        function value = straightReverseCalledWith(obj)
+            value = obj.straighReverseCalledWithValue;
+        end
+
+        function straightReverseRegulated(obj, powerPercent)
+            obj.straightReverseRegulatedCalledWithValue = powerPercent;
+        end
+        function value = straightReverseRegulatedCalledWith(obj)
+            value = obj.straightReverseRegulatedCalledWithValue;
+        end
+
+        function curveLeft(obj, powerPercent, turnPercent)
+            turnRatio = obj.computeTurnRatio(powerPercent, turnPercent);
+            obj.rightMotorForward(powerPercent)
+            obj.leftMotorForward(powerPercent * turnRatio);
+        end
+
+        function curveRight(obj, powerPercent, turnPercent)
+            turnRatio = obj.computeTurnRatio(powerPercent, turnPercent);
+            obj.leftMotorForward(powerPercent)
+            obj.rightMotorForward(powerPercent * turnRatio);
+        end
+
+        function turnRatio = computeTurnRatio(obj, powerPercent, turnPercent)
+            if turnPercent == 0
+                turnRatio = 1;
+            else
+                turnRatio = 1 - (turnPercent / 100.0);
+            end
+        end
+
+        function rotateAngleDegrees(obj, angleDegrees, powerPercent)
+        end
+
+        function rotateTime(obj, direction, powerPercent, timeSeconds)
+            % TODO: figure out how to initialize cell directly with values
+            obj.rotateTimeCalledWithValue = {};
+            obj.rotateTimeCalledWithValue{1} = direction;
+            obj.rotateTimeCalledWithValue{2} = powerPercent;
+            obj.rotateTimeCalledWithValue{3} = timeSeconds;
+        end
+        function value = rotateTimeCalledWith(obj)
+            value = obj.rotateTimeCalledWithValue;
+        end
+
+        function rotateClockwiseTime(obj, powerPercent, timeSeconds)
+            obj.rotateClockwise(powerPercent);
+        end
+
+        function rotateCounterClockwiseTime(obj, powerPercent, timeSeconds)
+            obj.rotateCounterClockwise(powerPercent);
+        end
+
+        function rotateAngleTime(obj, angleDegrees)
+            obj.rotateAngleTimeCalledWithValue(end+1) = angleDegrees;
+        end
+        function value = rotateAngleTimeCalledWith(obj)
+            value = obj.rotateAngleTimeCalledWithValue;
+        end
+
+        function forwardCentimetersDegrees(obj, distanceCentimeters)
+        end
+
+        function forwardCentimetersTime(obj, distanceCentimeters)
+            obj.forwardCentimetersTimeCalledWithValue(end+1) = ...
+                distanceCentimeters;
+        end
+        function value = forwardCentimetersTimeCalledWith(obj,...
+                                                          distanceCentimeters)
+            value = obj.forwardCentimetersTimeCalledWithValue;
+        end
+
+        function reverseCentimetersTime(obj, distanceCentimeters)
+            obj.reverseCentimetersTimeCalledWithValue = distanceCentimeters;
+        end
+        function value = reverseCentimetersTimeCalledWith(obj,...
+                                                          distanceCentimeters)
+            value = obj.reverseCentimetersTimeCalledWithValue;
+        end
+
+        function reverseCentimetersDegrees(obj, distanceCentimeters)
+        end
+
+        function allStop(obj)
         end
 
         function leftMotorForward(obj, powerPercent)
@@ -58,54 +161,16 @@ classdef MockRobot < Robot
         function value = rightMotorReverseCalledWith(obj, value)
             value = obj.m_rightMotorReverseCalledValue; 
         end
-        function straightForward(obj, powerPercent)
+
+        function rotateClockwise(obj, powerPercent)
+            obj.leftMotorForward(powerPercent);
+            obj.rightMotorReverse(powerPercent);
         end
-        function straightForwardRegulated(obj, powerPercent)
-            obj.straightForwardRegulatedCalledWithValue = powerPercent;
+
+        function rotateCounterClockwise(obj, powerPercent)
+            obj.rightMotorForward(powerPercent);
+            obj.leftMotorReverse(powerPercent);
         end
-        function value = straightForwardRegulatedCalledWith(obj)
-            value = obj.straightForwardRegulatedCalledWithValue;
-        end
-        function straightReverse(obj, powerPercent)
-            obj.straighReverseCalledWithValue = powerPercent;
-        end
-        function value = straightReverseCalledWith(obj)
-            value = obj.straighReverseCalledWithValue;
-        end
-        function straightReverseRegulated(obj, powerPercent)
-            obj.straightReverseRegulatedCalledWithValue = powerPercent;
-        end
-        function value = straightReverseRegulatedCalledWith(obj)
-            value = obj.straightReverseRegulatedCalledWithValue;
-        end
-        function rotateAngleDegrees(obj, angleDegrees, powerPercent)
-        end
-        function rotateAngleTime(obj, angleDegrees)
-            obj.rotateAngleTimeCalledWithValue(end+1) = angleDegrees;
-        end
-        function value = rotateAngleTimeCalledWith(obj)
-            value = obj.rotateAngleTimeCalledWithValue;
-        end
-        function forwardCentimetersDegrees(obj, distanceCentimeters)
-        end
-        function forwardCentimetersTime(obj, distanceCentimeters)
-            obj.forwardCentimetersTimeCalledWithValue(end+1) = ...
-                distanceCentimeters;
-        end
-        function value = forwardCentimetersTimeCalledWith(obj,...
-                                                          distanceCentimeters)
-            value = obj.forwardCentimetersTimeCalledWithValue;
-        end
-        function reverseCentimetersTime(obj, distanceCentimeters)
-            obj.reverseCentimetersTimeCalledWithValue = distanceCentimeters;
-        end
-        function value = reverseCentimetersTimeCalledWith(obj,...
-                                                          distanceCentimeters)
-            value = obj.reverseCentimetersTimeCalledWithValue;
-        end
-        function reverseCentimetersDegrees(obj, distanceCentimeters)
-        end
-        function allStop(obj)
-        end
+
     end
 end
