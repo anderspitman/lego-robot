@@ -1,4 +1,4 @@
-classdef RobotTest < matlab.unittest.TestCase
+classdef TestMockRobot < matlab.unittest.TestCase
     methods (Test)
         function testClassExists(testCase)
             robot = MockRobot();
@@ -37,6 +37,38 @@ classdef RobotTest < matlab.unittest.TestCase
         function testConstants(testCase)
             robot = MockRobot();
             testCase.verifyEqual(robot.COLOR_BLUE, 1);
+        end
+
+        function testStraightForwardRegulated(obj)
+            robot = MockRobot();
+            robot.straightForwardRegulated(30);
+            obj.verifyEqual(robot.straightForwardRegulatedCalledWith(), 30);
+        end
+
+        function testStraightReverseRegulated(obj)
+            robot = MockRobot();
+            robot.straightReverseRegulated(30);
+            obj.verifyEqual(robot.straightReverseRegulatedCalledWith(), 30);
+        end
+
+        function testForwardCentimetersTime(obj)
+            robot = MockRobot();
+            robot.forwardCentimetersTime(30);
+            obj.verifyEqual(robot.forwardCentimetersTimeCalledWith(), 30);
+        end
+
+        function testReverseCentimetersTime(obj)
+            robot = MockRobot();
+            robot.reverseCentimetersTime(30);
+            obj.verifyEqual(robot.reverseCentimetersTimeCalledWith(), 30);
+        end
+
+        function testRotateTime(obj)
+            robot = MockRobot();
+            robot.rotateTime(90);
+            obj.verifyEqual(robot.rotateTimeCalledWith(), 90);
+            robot.rotateTime(-90);
+            obj.verifyEqual(robot.rotateTimeCalledWith(), -90);
         end
     end
 end

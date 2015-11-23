@@ -31,6 +31,7 @@ classdef BackAndRotateLineFollower < LineFollower
                 foundInteraction = true;
             end
 
+            % TODO: How does it work with this here?
             obj.robot.allStop();
         end
 
