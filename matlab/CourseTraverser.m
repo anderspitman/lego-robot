@@ -113,12 +113,13 @@ classdef CourseTraverser < handle
         function returnToLine(obj)
             % post-interaction line return
             % backs up until we pass the line, then rotates toward the
-            % finish
+            % course direction
             speed = 15;
-            while (obj.robot.getPositionState() ~= Robot.STATE_ON_LINE)
+            while obj.robot.getPositionState() == Robot.STATE_OFF_LINE
                 obj.robot.straightBackwardRegulated(speed);
             end
-            while (obj.robot.getPositionState() ~= Robot.STATE_OFF_LINE)
+            
+            while obj.robot.getPositionState() ~= Robot.STATE_OFF_LINE
                 obj.robot.straightBackwardRegulated(speed);
             end
             obj.robot.rotateCWDegrees(45, 20);
@@ -129,7 +130,7 @@ classdef CourseTraverser < handle
             % drive until we hit the line
             % FIXME: add a failsafe in case we're already on or past the
             % line, possibly backing up or bailing out after x seconds
-            while (obj.robot.getPositionState() ~= Robot.STATE_ON_LINE)
+            while (obj.robot.getPositionState() == Robot.STATE_OFF_LINE)
                 obj.robot.straightForwardRegulated(speed);
             end
             
