@@ -1,7 +1,10 @@
 clear
 
-traverser = CourseTraverser();
-traverser.traverse();
+robot = LegoRobot();
+lineFollower = LineFollower.makeLineFollower('back_and_rotate', robot);
+traverser = CourseTraverser(robot, lineFollower);
+%traverser.traverse();
+
 % for i=1:10
 %     result(i) = traverser.measureTimeToLine()
 %     disp(result);

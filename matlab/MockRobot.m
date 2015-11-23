@@ -60,18 +60,18 @@ classdef MockRobot < Robot
         end
 
         function curveLeft(obj, powerPercent, turnPercent)
-            turnRatio = obj.computeTurnRatio(powerPercent, turnPercent);
+            turnRatio = obj.computeTurnRatio(turnPercent);
             obj.rightMotorForward(powerPercent)
             obj.leftMotorForward(powerPercent * turnRatio);
         end
 
         function curveRight(obj, powerPercent, turnPercent)
-            turnRatio = obj.computeTurnRatio(powerPercent, turnPercent);
+            turnRatio = obj.computeTurnRatio(turnPercent);
             obj.leftMotorForward(powerPercent)
             obj.rightMotorForward(powerPercent * turnRatio);
         end
 
-        function turnRatio = computeTurnRatio(obj, powerPercent, turnPercent)
+        function turnRatio = computeTurnRatio(obj, turnPercent)
             if turnPercent == 0
                 turnRatio = 1;
             else
