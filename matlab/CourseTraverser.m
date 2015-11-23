@@ -2,15 +2,18 @@ classdef CourseTraverser < handle
 
     properties(Access=private)
         robot
+        lineFinder
         lineFollower
         firstInteraction
     end
     
     methods
-        function obj = CourseTraverser(robot, lineFollower)
+        function obj = CourseTraverser(robot, lineFinder, lineFollower)
             obj.robot = robot;
+            obj.lineFinder = lineFinder;
             obj.lineFollower = lineFollower;
-            obj.firstInteraction = Interaction.makeInteraction('first', robot);
+            obj.firstInteraction = Interaction.makeInteraction('first',...
+                                                               robot);
         end
         
         function traverse(obj)

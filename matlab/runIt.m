@@ -1,21 +1,8 @@
 clear
 
-%traverser = CourseTraverser();
-%traverser.traverse();
-% for i=1:10
-%     result(i) = traverser.measureTimeToLine()
-%     disp(result);
-% end
+robot = Robot.makeRobot('lego');
+lineFinder = LineFinder.makeLineFinder('basic', robot);
+lineFollower = LineFollower.makeLineFollower('back_and_rotate', robot);
 
-robot = LegoRobot();
-%lineFollower = CenterSensorLineFollower(robot);
-lineFollower = DriveIdleLineFollower(robot);
-%lineFollower.followLineToInteraction();
-traverser = CourseTraverser(robot, lineFollower);
-
-%robot = LegoRobot();
-%lineFollower = FineLineFollower(robot);
-%ineFollower.followLineToInteraction();
-
-%robot.forwardCentimetersDegrees(1, 20);
-%robot.reverseCentimetersDegrees(1, 20);
+traverser = CourseTraverser(robot, lineFinder, lineFollower);
+traverser.traverse();
