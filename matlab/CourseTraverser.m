@@ -228,6 +228,23 @@ classdef CourseTraverser < handle
             end
         end
         
+        function returnToLine(obj)
+            % post-interaction line return
+            % backs up until we pass the line, then rotates toward the
+            % finish
+            speed = 15;
+            while (obj.robot.getPositionState() ~= Robot.STATE_ON_LINE)
+                obj.robot.straightBackwardRegulated(speed);
+            end
+            while (obj.robot.getPositionState() ~= Robot.STATE_OFF_LINE)
+                obj.robot.straightBackwardRegulated(speed);
+            end
+            obj.robot.rotateCWDegrees(45, 20);
+        end
+            
+            
+            
+        
         function crossOverLine(obj)
             speed = 15;
             % drive until we hit the line
