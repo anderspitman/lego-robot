@@ -1,5 +1,25 @@
 
 classdef LineFollowerTests < matlab.unittest.TestCase
+    properties (Constant)
+        DRIVE_POWER = 30;
+        IDLE_POWER = 20;
+    end
+
+    methods
+        function verifyCurvedLeft(testCase, robot)
+            testCase.verifyEqual(robot.leftMotorReverseCalledWith(),...
+                                 testCase.IDLE_POWER);
+            testCase.verifyEqual(robot.rightMotorForwardCalledWith(),...
+                                 testCase.DRIVE_POWER);
+        end
+        function verifyCurvedRight(testCase, robot)
+            testCase.verifyEqual(robot.rightMotorReverseCalledWith(),...
+                                 testCase.IDLE_POWER);
+            testCase.verifyEqual(robot.leftMotorForwardCalledWith(),...
+                                 testCase.DRIVE_POWER);
+        end
+    end
+
     methods (Test)
         function testConstructor(testCase)
             robot = MockRobot();
@@ -19,39 +39,37 @@ classdef LineFollowerTests < matlab.unittest.TestCase
         function testFollowLineOnLine(testCase)
             robot = MockRobot();
             lineFollower = LineFollower.makeLineFollower('drive_idle', robot);
+            lineFollower.setSide(LineFollower.SIDE_LEFT);
 
             robot.setPositionState(Robot.STATE_ON_LINE);
             lineFollower.iterate();
 
             testCase.verifyTrue(robot.getPositionStateCalled());
-            testCase.verifyEqual(robot.leftMotorForwardCalledWith(), 30);
-            testCase.verifyEqual(robot.rightMotorReverseCalledWith(), 20);
+            testCase.verifyCurvedLeft(robot);
         end
 
         function testFollowLineOffLine(testCase)
             robot = MockRobot();
             lineFollower = LineFollower.makeLineFollower('drive_idle', robot);
+            lineFollower.setSide(LineFollower.SIDE_LEFT);
 
             robot.setPositionState(Robot.STATE_OFF_LINE);
             lineFollower.iterate();
-            testCase.verifyEqual(robot.leftMotorReverseCalledWith(), 20);
-            testCase.verifyEqual(robot.rightMotorForwardCalledWith(), 30);
+            testCase.verifyCurvedRight(robot);
         end
 
         function testCurveLeft(testCase)
             robot = MockRobot();
             lineFollower = LineFollower.makeLineFollower('drive_idle', robot);
             lineFollower.curveLeft();
-            testCase.verifyEqual(robot.leftMotorForwardCalledWith(), 30);
-            testCase.verifyEqual(robot.rightMotorReverseCalledWith(), 20);
+            testCase.verifyCurvedLeft(robot);
         end
 
         function testCurveRight(testCase)
             robot = MockRobot();
             lineFollower = LineFollower.makeLineFollower('drive_idle', robot);
             lineFollower.curveRight();
-            testCase.verifyEqual(robot.leftMotorReverseCalledWith(), 20);
-            testCase.verifyEqual(robot.rightMotorForwardCalledWith(), 30);
+            testCase.verifyCurvedRight(robot);
         end
 
         function testCurveTowardLineLeft(testCase)
@@ -59,8 +77,7 @@ classdef LineFollowerTests < matlab.unittest.TestCase
             lineFollower = LineFollower.makeLineFollower('drive_idle', robot);
             lineFollower.setSide(LineFollower.SIDE_LEFT);
             lineFollower.curveTowardLine();
-            testCase.verifyEqual(robot.leftMotorReverseCalledWith(), 20);
-            testCase.verifyEqual(robot.rightMotorForwardCalledWith(), 30);
+            testCase.verifyCurvedRight(robot);
         end
 
         function testCurveTowardLineRight(testCase)
@@ -68,8 +85,7 @@ classdef LineFollowerTests < matlab.unittest.TestCase
             lineFollower = LineFollower.makeLineFollower('drive_idle', robot);
             lineFollower.setSide(LineFollower.SIDE_RIGHT);
             lineFollower.curveTowardLine();
-            testCase.verifyEqual(robot.leftMotorForwardCalledWith(), 30);
-            testCase.verifyEqual(robot.rightMotorReverseCalledWith(), 20);
+            testCase.verifyCurvedLeft(robot);
         end
 
         function testCurveAwayFromLineLeft(testCase)
@@ -77,8 +93,7 @@ classdef LineFollowerTests < matlab.unittest.TestCase
             lineFollower = LineFollower.makeLineFollower('drive_idle', robot);
             lineFollower.setSide(LineFollower.SIDE_LEFT);
             lineFollower.curveAwayFromLine();
-            testCase.verifyEqual(robot.leftMotorForwardCalledWith(), 30);
-            testCase.verifyEqual(robot.rightMotorReverseCalledWith(), 20);
+            testCase.verifyCurvedLeft(robot);
         end
 
         function testCurveAwayFromLineRight(testCase)
@@ -86,8 +101,7 @@ classdef LineFollowerTests < matlab.unittest.TestCase
             lineFollower = LineFollower.makeLineFollower('drive_idle', robot);
             lineFollower.setSide(LineFollower.SIDE_RIGHT);
             lineFollower.curveAwayFromLine();
-            testCase.verifyEqual(robot.leftMotorReverseCalledWith(), 20);
-            testCase.verifyEqual(robot.rightMotorForwardCalledWith(), 30);
+            testCase.verifyCurvedRight(robot);
         end
     end
 end
