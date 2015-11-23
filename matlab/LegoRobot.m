@@ -20,6 +20,7 @@ classdef LegoRobot < Robot
         CENTIMETERS_PER_SECOND = 17.75;
         DEGREES_ROTATE_PER_SECOND = 190;
         ROTATE_TIME_PERCENT_POWER = 60;
+        POWER_SECONDS_PER_DEGREE = LegoRobot.ROTATE_TIME_PERCENT_POWER / LegoRobot.DEGREES_ROTATE_PER_SECOND;
         
         TIRE_DIAMETER_CENTIMETERS = 4.3;
         TIRE_RADIUS_CENTIMETERS = LegoRobot.TIRE_DIAMETER_CENTIMETERS / 2;
@@ -99,7 +100,7 @@ classdef LegoRobot < Robot
                                    powerPercent);
         end
         
-        function straightBack(obj, powerPercent)
+        function straightReverse(obj, powerPercent)
             obj.brick.motorReverse(LegoRobot.BOTH_MOTORS,...
                                    powerPercent);
         end
@@ -184,6 +185,10 @@ classdef LegoRobot < Robot
             obj.brick.motorRotateExt(...
                 LegoRobot.ARM_MOTOR, powerPercent, angleDegrees, 0, ...
                 true, true);
+        end
+        
+        function battery = getBatteryLevel(obj)
+            battery = obj.brick.getBatteryLevel();
         end
     end
 end

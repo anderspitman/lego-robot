@@ -15,28 +15,28 @@ classdef CourseTraverser < handle
         
         function traverse(obj)
             
-            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
+            obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
             obj.lineFollower.followLineToInteraction();
             
-            obj.doFirstInteraction();
+            %obj.orientToInteractionFollow();
+            obj.orientToInteractionDistance();
+            %obj.doFirstInteraction();
             
             obj.robot.allStop();
         end
         
-        function rotateCCWDegrees(obj, speed, degrees)
-            speedSecondsPerDegree = 50/90;
+        function rotateCCWDegrees(obj, degrees, speed)
             obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
             obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
-            pause((degrees / speed) * speedSecondsPerDegree);
-            obj.robot.brake();
+            pause((degrees / speed) * LegoRobot.POWER_SECONDS_PER_DEGREE);
+            obj.robot.allStop();
         end
         
-        function rotateCWDegrees(obj, speed, degrees)
-            speedSecondsPerDegree = 50/90;
+        function rotateCWDegrees(obj, degrees, speed)
             obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, speed);
             obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, speed);
-            pause((degrees / speed) * speedSecondsPerDegree);
-            obj.robot.brake();
+            pause((degrees / speed) * LegoRobot.POWER_SECONDS_PER_DEGREE);
+            obj.robot.allStop();
         end
         
         function orientToInteractionArmAlign(obj)
@@ -46,24 +46,38 @@ classdef CourseTraverser < handle
             obj.robot.rotateCCWDegrees(20, 20);
         end
         
+        function orientDistanceIteration(obj, distance)
+            % we're too far to the right (detecting nothing)
+            % rotate CCW until we're facing something
+            d = obj.robot.getDistanceState();
+            while (d < 0 || d > distance)
+                obj.rotateCCWDegrees(30, 10);
+                d = obj.robot.getDistanceState();
+                fprintf('cur: %d, target: %d\n', d, distance);
+            end
+            obj.robot.allStop();
+        end
+        
         function orientToInteractionDistance(obj)
             % right side mounted US sensor
-            minDistanceToTarget = 10;
-            aligned = false
+            obj.rotateCCWDegrees(45, 20);
+            minDistanceToTarget = 15;
+            aligned = false;
             while ~aligned
-                d = obj.robot.getDistanceState()
-                if d < 0
-                    % we're too far to the right (detecting nothing)
-                    % rotate CCW until we're facing something
-                    while (d < 0)
-                        obj.robot.rotateCCW();
-                        d = obj.robot.getDistanceState();
-                    end
-                elseif d < minDistanceToTarget
-                    % rotate a little more centered
-                    obj.robot.rotateCW();
-                    aligned = true;
+                d = obj.robot.getDistanceState();
+                fprintf('%d\n', d);
+                if d < 0 || d > minDistanceToTarget
+                    obj.orientDistanceIteration(minDistanceToTarget);
+                    %obj.robot.forwardCentimetersDegrees(2, 10);
+                    %obj.orientDistanceIteration(minDistanceToTarget / 1.5);
+                    %obj.robot.forwardCentimetersDegrees(2, 10);
+                    %obj.orientDistanceIteration(minDistanceToTarget / 2);
+                    %obj.robot.forwardCentimetersDegrees(2, 10);
                 end
+                d = obj.robot.getDistanceState();
+                % rotate a little more centered
+                obj.rotateCCWDegrees(acosd(12.5 / d), 10);
+                aligned = true;               
             end
         end
         
@@ -76,7 +90,7 @@ classdef CourseTraverser < handle
             %FIXME: calculate time to follow from distance
             % follow for a few seconds to straighten out the robot
             start = clock;
-            while (etime (clock, start) <= 3)
+            while (etime (clock, start) <= 1.2)
                 obj.iterateInteractionLine();
             end
             obj.lineFollower.setSide(s);
