@@ -20,5 +20,6 @@ classdef (Abstract) Robot < handle
         forwardCentimetersDegrees(obj, distanceCentimeters)
         reverseCentimetersDegrees(obj, distanceCentimeters)
         allStop(obj)
+        rotateArm(obj, angleDegrees, powerPercent)
     end
 end

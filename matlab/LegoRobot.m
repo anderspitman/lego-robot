@@ -13,6 +13,8 @@ classdef LegoRobot < Robot
         RIGHT_MOTOR = lego.NXT.OUT_C;
         BOTH_MOTORS = lego.NXT.OUT_AC;
         
+        ARM_MOTOR = lego.NXT.OUT_B;
+        
         MOTOR_POWER_PERCENT = 60;
         
         CENTIMETERS_PER_SECOND = 17.75;
@@ -176,6 +178,12 @@ classdef LegoRobot < Robot
                 abs(angleDegrees) / LegoRobot.DEGREES_ROTATE_PER_SECOND;
             pause(rotateTimeSeconds);
             obj.allStop();
+        end
+        
+        function rotateArm(obj, angleDegrees, powerPercent)
+            obj.brick.motorRotateExt(...
+                LegoRobot.ARM_MOTOR, powerPercent, angleDegrees, 0, ...
+                true, true);
         end
     end
 end
