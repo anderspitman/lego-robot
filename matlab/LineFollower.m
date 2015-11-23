@@ -14,14 +14,14 @@ classdef LineFollower < handle
         function newLineFollower = makeLineFollower(type, robot)
             if strcmp(type, 'drive_idle')
                 newLineFollower = DriveIdleLineFollower(robot);
+            elseif strcmp(type, 'back_and_rotate')
+                newLineFollower = BackAndRotateLineFollower(robot);
             end
         end
     end
 
     methods(Abstract)
-        followLine(obj)
         followLineToInteraction(obj)
-        findLine(obj)
     end
 
     methods

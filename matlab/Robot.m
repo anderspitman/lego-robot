@@ -14,7 +14,7 @@ classdef (Abstract) Robot < handle
         rightMotorForward(obj, powerPercent)
         rightMotorReverse(obj, powerPercent)
         straightForward(obj, powerPercent)
-        straightBack(obj, powerPercent)
+        straightReverse(obj, powerPercent)
         rotateDegrees(obj, angleDegrees, powerPercent)
         rotateTime(obj, angleDegrees)
         forwardCentimetersDegrees(obj, distanceCentimeters)

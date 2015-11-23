@@ -10,12 +10,6 @@ classdef FineLineFollower < LineFollower
 
         end
         
-        function findLine(obj)
-        end
-
-        function followLine(obj)
-        end
-        
         function followLineToInteraction(obj)
             
             foundInteraction = false;

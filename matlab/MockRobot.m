@@ -7,6 +7,7 @@ classdef MockRobot < Robot
         m_rightMotorForwardCalledValue
         m_rightMotorReverseCalledValue
         positionState
+        straighReverseCalledWithValue
     end
 
     methods
@@ -54,7 +55,11 @@ classdef MockRobot < Robot
         end
         function straightForward(obj, powerPercent)
         end
-        function straightBack(obj, powerPercent)
+        function straightReverse(obj, powerPercent)
+            obj.straighReverseCalledWithValue = powerPercent;
+        end
+        function value = straightReverseCalledWith(obj)
+            value = obj.straighReverseCalledWithValue;
         end
         function rotateDegrees(obj, angleDegrees, powerPercent)
         end
