@@ -1,7 +1,7 @@
 classdef FineLineFollower < LineFollower
     properties (Constant)
-        DRIVE_POWER_PERCENT = 15;
-        IDLE_POWER_PERCENT = 10;
+        DRIVE_POWER_PERCENT = 5;
+        IDLE_POWER_PERCENT = 4;
     end
 
     methods
@@ -18,17 +18,29 @@ classdef FineLineFollower < LineFollower
                 positionState = obj.robot.getPositionState();
                 
                 if positionState == Robot.STATE_ON_LINE
-                    obj.robot.leftMotorForward(FineLineFollower.IDLE_POWER_PERCENT);
-                    obj.robot.rightMotorForward(FineLineFollower.DRIVE_POWER_PERCENT);
+                    obj.getOffLine();
+                elseif positionState == Robot.STATE_OFF_LINE
+                    obj.curveTowardLine();
                 elseif positionState == Robot.STATE_ON_INTERACTION
                     foundInteraction = true;
-                elseif positionState == Robot.STATE_OFF_LINE
-                    obj.robot.leftMotorForward(FineLineFollower.DRIVE_POWER_PERCENT);
-                    obj.robot.rightMotorForward(FineLineFollower.IDLE_POWER_PERCENT);
                 end
             end
             
             obj.robot.allStop();
+        end
+
+        function getOffLine(obj)
+            positionState = Robot.STATE_ON_LINE;
+            while positionState == Robot.STATE_ON_LINE
+                obj.robot.leftMotorReverseRegulated(FineLineFollower.IDLE_POWER_PERCENT);
+                obj.robot.rightMotorForwardRegulated(FineLineFollower.IDLE_POWER_PERCENT);
+                positionState = obj.robot.getPositionState();
+            end
+        end
+
+        function curveTowardLine(obj)
+            obj.robot.rightMotorForwardRegulated(FineLineFollower.IDLE_POWER_PERCENT);
+            obj.robot.leftMotorForwardRegulated(FineLineFollower.DRIVE_POWER_PERCENT);
         end
     end
 end
