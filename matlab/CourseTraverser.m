@@ -18,12 +18,16 @@ classdef CourseTraverser < handle
         
         function traverse(obj)
             
-            obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
-            obj.lineFollower.followLineToInteraction();
+            obj.lineFinder.findLine();
             
-            %obj.orientToInteractionFollow();
-            obj.orientToInteractionDistance();
-            %obj.doFirstInteraction();
+            obj.crossOverLine();
+            
+            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
+            
+            obj.lineFollower.followLineToInteraction();
+
+            
+            obj.doFirstInteraction();
             
             obj.robot.allStop();
         end
@@ -181,6 +185,16 @@ classdef CourseTraverser < handle
         function doThirdInteraction(obj)
             % follow the same methodology as above
             % just dont lower the arm as you back out
+
+        function crossOverLine(obj)
+            positionState = obj.robot.getPositionState();
+            
+            while positionState == Robot.STATE_ON_LINE
+                obj.robot.straightForward(60);
+                positionState = obj.robot.getPositionState();
+            end
+            
+            obj.robot.allStop();
         end
     end
 end
