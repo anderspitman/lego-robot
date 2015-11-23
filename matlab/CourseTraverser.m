@@ -46,7 +46,7 @@ classdef CourseTraverser < handle
             obj.robot.rotateCCWDegrees(20, 20);
         end
         
-        function orientDistanceIteration(obj, distance)
+        function orientDistanceIteration(obj, distance)           
             % we're too far to the right (detecting nothing)
             % rotate CCW until we're facing something
             d = obj.robot.getDistanceState();
@@ -59,6 +59,13 @@ classdef CourseTraverser < handle
         end
         
         function orientToInteractionDistance(obj)
+            % drive over the red line
+            obj.robot.getPositionState();
+            while (obj.robot.getPositionState() == Robot.STATE_ON_INTERACTION)
+                obj.robot.straightForwardRegulated(10);
+            end
+            obj.robot.allStop();
+ 
             % right side mounted US sensor
             obj.rotateCCWDegrees(45, 20);
             minDistanceToTarget = 15;
@@ -76,8 +83,15 @@ classdef CourseTraverser < handle
                 end
                 d = obj.robot.getDistanceState();
                 % rotate a little more centered
-                obj.rotateCCWDegrees(acosd(12.5 / d), 10);
-                aligned = true;               
+                rot = acosd(12.5 / d);
+                fprintf('rotating %d degrees\n', rot);
+                i = 0;
+                while i < rot || obj.robot.getPositionState() ~= Robot.STATE_ON_INTERACTION
+                    obj.rotateCCWDegrees(0.1, 10);
+                end
+                
+                % make sure we dont go over the red line
+                aligned = true;
             end
         end
         
