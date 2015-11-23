@@ -52,5 +52,19 @@ classdef MockRobot < Robot
         function value = rightMotorReverseCalledWith(obj, value)
             value = obj.m_rightMotorReverseCalledValue; 
         end
+        function straightForward(obj, powerPercent)
+        end
+        function straightBack(obj, powerPercent)
+        end
+        function rotateDegrees(obj, angleDegrees, powerPercent)
+        end
+        function rotateTime(obj, angleDegrees)
+        end
+        function forwardCentimetersDegrees(obj, distanceCentimeters)
+        end
+        function reverseCentimetersDegrees(obj, distanceCentimeters)
+        end
+        function allStop(obj)
+        end
     end
 end
