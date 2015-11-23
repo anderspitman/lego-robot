@@ -66,9 +66,8 @@ classdef TestMockRobot < matlab.unittest.TestCase
         function testRotateTime(obj)
             robot = MockRobot();
             robot.rotateTime(90);
-            obj.verifyEqual(robot.rotateTimeCalledWith(), 90);
             robot.rotateTime(-90);
-            obj.verifyEqual(robot.rotateTimeCalledWith(), -90);
+            obj.verifyEqual(robot.rotateTimeCalledWith(), [90 -90]);
         end
     end
 end

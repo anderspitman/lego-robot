@@ -81,7 +81,7 @@ classdef MockRobot < Robot
         function rotateDegrees(obj, angleDegrees, powerPercent)
         end
         function rotateTime(obj, angleDegrees)
-            obj.rotateTimeCalledWithValue = angleDegrees;
+            obj.rotateTimeCalledWithValue(end+1) = angleDegrees;
         end
         function value = rotateTimeCalledWith(obj)
             value = obj.rotateTimeCalledWithValue;
@@ -89,7 +89,8 @@ classdef MockRobot < Robot
         function forwardCentimetersDegrees(obj, distanceCentimeters)
         end
         function forwardCentimetersTime(obj, distanceCentimeters)
-            obj.forwardCentimetersTimeCalledWithValue = distanceCentimeters;
+            obj.forwardCentimetersTimeCalledWithValue(end+1) = ...
+                distanceCentimeters;
         end
         function value = forwardCentimetersTimeCalledWith(obj,...
                                                           distanceCentimeters)

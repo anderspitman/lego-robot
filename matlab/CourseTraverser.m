@@ -3,12 +3,14 @@ classdef CourseTraverser < handle
     properties(Access=private)
         robot
         lineFollower
+        firstInteraction
     end
     
     methods
         function obj = CourseTraverser(robot, lineFollower)
             obj.robot = robot;
             obj.lineFollower = lineFollower;
+            obj.firstInteraction = Interaction.makeInteraction('first', robot);
         end
         
         function traverse(obj)
@@ -22,13 +24,7 @@ classdef CourseTraverser < handle
         end
                
         function doFirstInteraction(obj)
-            obj.robot.forwardCentimetersTime(20);
-            obj.robot.rotateTime(-90);
-            obj.robot.forwardCentimetersTime(35);
-            obj.robot.rotateTime(-120);
-            obj.robot.forwardCentimetersTime(40);
-            obj.robot.rotateTime(-90);
-            obj.robot.forwardCentimetersTime(20);
+            obj.firstInteraction.complete();
         end
     end
 end
