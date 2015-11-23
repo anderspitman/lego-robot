@@ -126,7 +126,7 @@ classdef LegoRobot < Robot
                 true);
         end
         
-        function rotateDegrees(obj, angleDegrees, powerPercent)
+        function rotateAngleDegrees(obj, angleDegrees, powerPercent)
             tireDegreesPerRobotDegrees = 2;
             tireAngle = angleDegrees * tireDegreesPerRobotDegrees;
             if angleDegrees >= 0

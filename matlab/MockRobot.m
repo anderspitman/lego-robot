@@ -78,7 +78,7 @@ classdef MockRobot < Robot
         function value = straightReverseRegulatedCalledWith(obj)
             value = obj.straightReverseRegulatedCalledWithValue;
         end
-        function rotateDegrees(obj, angleDegrees, powerPercent)
+        function rotateAngleDegrees(obj, angleDegrees, powerPercent)
         end
         function rotateAngleTime(obj, angleDegrees)
             obj.rotateAngleTimeCalledWithValue(end+1) = angleDegrees;
