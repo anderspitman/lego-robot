@@ -69,5 +69,82 @@ classdef TestMockRobot < matlab.unittest.TestCase
             robot.rotateAngleTime(-90);
             obj.verifyEqual(robot.rotateAngleTimeCalledWith(), [90 -90]);
         end
+
+        function testRotateTime(obj)
+            robot = MockRobot();
+            robot.rotateTime(Robot.DIRECTION_CLOCKWISE, 60, 2);
+            obj.verifyEqual(robot.rotateTimeCalledWith(),...
+                            {Robot.DIRECTION_CLOCKWISE, 60, 2});
+        end
+
+        function testRotateClockwiseTime(obj)
+            robot = MockRobot();
+            robot.rotateClockwiseTime(60);
+            obj.verifyEqual(robot.leftMotorForwardCalledWith(), 60);
+            obj.verifyEqual(robot.rightMotorReverseCalledWith(), 60);
+        end
+
+        function testRotateCounterClockwiseTime(obj)
+            robot = MockRobot();
+            robot.rotateCounterClockwiseTime(60);
+            obj.verifyEqual(robot.leftMotorReverseCalledWith(), 60);
+            obj.verifyEqual(robot.rightMotorForwardCalledWith(), 60);
+        end
+
+        function testRotateClockwise(obj)
+            robot = MockRobot();
+            robot.rotateClockwise(60);
+            obj.verifyEqual(robot.leftMotorForwardCalledWith(), 60);
+            obj.verifyEqual(robot.rightMotorReverseCalledWith(), 60);
+        end
+
+        function testRotateCounterClockwise(obj)
+            robot = MockRobot();
+            robot.rotateCounterClockwise(60);
+            obj.verifyEqual(robot.leftMotorReverseCalledWith(), 60);
+            obj.verifyEqual(robot.rightMotorForwardCalledWith(), 60);
+        end
+
+        function testCurveLeftNoTurn(obj)
+            robot = MockRobot();
+            robot.curveLeft(60, 0); 
+            obj.verifyEqual(robot.leftMotorForwardCalledWith(), 60);
+            obj.verifyEqual(robot.rightMotorForwardCalledWith(), 60);
+        end
+        
+        function testCurveLeftFullTurn(obj)
+            robot = MockRobot();
+            robot.curveLeft(60, 100); 
+            obj.verifyEqual(robot.leftMotorForwardCalledWith(), 0);
+            obj.verifyEqual(robot.rightMotorForwardCalledWith(), 60);
+        end
+
+        function testCurveLeftPartialTurn(obj)
+            robot = MockRobot();
+            robot.curveLeft(50, 20); 
+            obj.verifyEqual(robot.leftMotorForwardCalledWith(), 40);
+            obj.verifyEqual(robot.rightMotorForwardCalledWith(), 50);
+        end
+
+        function testCurveRightNoTurn(obj)
+            robot = MockRobot();
+            robot.curveRight(60, 0); 
+            obj.verifyEqual(robot.rightMotorForwardCalledWith(), 60);
+            obj.verifyEqual(robot.leftMotorForwardCalledWith(), 60);
+        end
+        
+        function testCurveRightFullTurn(obj)
+            robot = MockRobot();
+            robot.curveRight(60, 100); 
+            obj.verifyEqual(robot.rightMotorForwardCalledWith(), 0);
+            obj.verifyEqual(robot.leftMotorForwardCalledWith(), 60);
+        end
+
+        function testCurveRightPartialTurn(obj)
+            robot = MockRobot();
+            robot.curveRight(50, 20); 
+            obj.verifyEqual(robot.rightMotorForwardCalledWith(), 40);
+            obj.verifyEqual(robot.leftMotorForwardCalledWith(), 50);
+        end
     end
 end

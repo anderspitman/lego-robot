@@ -99,7 +99,7 @@ classdef LegoRobot < Robot
                                    powerPercent);
         end
         
-        function straightBack(obj, powerPercent)
+        function straightReverse(obj, powerPercent)
             obj.brick.motorReverse(LegoRobot.BOTH_MOTORS,...
                                    powerPercent);
         end
