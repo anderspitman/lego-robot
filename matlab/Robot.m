@@ -18,7 +18,7 @@ classdef (Abstract) Robot < handle
         straightReverse(obj, powerPercent)
         straightReverseRegulated(obj, powerPercent)
         rotateDegrees(obj, angleDegrees, powerPercent)
-        rotateTime(obj, angleDegrees)
+        rotateAngleTime(obj, angleDegrees)
         forwardCentimetersDegrees(obj, distanceCentimeters)
         forwardCentimetersTime(obj, distanceCentimeters)
         reverseCentimetersDegrees(obj, distanceCentimeters)

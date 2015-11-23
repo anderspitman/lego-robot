@@ -12,7 +12,7 @@ classdef MockRobot < Robot
         straightReverseRegulatedCalledWithValue
         forwardCentimetersTimeCalledWithValue
         reverseCentimetersTimeCalledWithValue
-        rotateTimeCalledWithValue
+        rotateAngleTimeCalledWithValue
     end
 
     methods
@@ -80,11 +80,11 @@ classdef MockRobot < Robot
         end
         function rotateDegrees(obj, angleDegrees, powerPercent)
         end
-        function rotateTime(obj, angleDegrees)
-            obj.rotateTimeCalledWithValue(end+1) = angleDegrees;
+        function rotateAngleTime(obj, angleDegrees)
+            obj.rotateAngleTimeCalledWithValue(end+1) = angleDegrees;
         end
-        function value = rotateTimeCalledWith(obj)
-            value = obj.rotateTimeCalledWithValue;
+        function value = rotateAngleTimeCalledWith(obj)
+            value = obj.rotateAngleTimeCalledWithValue;
         end
         function forwardCentimetersDegrees(obj, distanceCentimeters)
         end

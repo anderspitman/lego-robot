@@ -16,7 +16,7 @@ classdef TestCourseTraverser < matlab.unittest.TestCase
             traverser.doFirstInteraction();
             obj.verifyEqual(robot.forwardCentimetersTimeCalledWith(),...
                             [20 35 40 20]);
-            obj.verifyEqual(robot.rotateTimeCalledWith(), [-90 -120 -90]);
+            obj.verifyEqual(robot.rotateAngleTimeCalledWith(), [-90 -120 -90]);
         end
 
     end

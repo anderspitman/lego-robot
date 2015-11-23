@@ -156,7 +156,7 @@ classdef LegoRobot < Robot
             obj.allStop();
         end
         
-        function rotateTime(obj, angleDegrees)
+        function rotateAngleTime(obj, angleDegrees)
             if angleDegrees >= 0
                 obj.leftMotorReverse(LegoRobot.ROTATE_TIME_PERCENT_POWER);
                 obj.rightMotorForward(LegoRobot.ROTATE_TIME_PERCENT_POWER);
@@ -165,9 +165,9 @@ classdef LegoRobot < Robot
                 obj.leftMotorForward(LegoRobot.ROTATE_TIME_PERCENT_POWER);
             end
             
-            rotateTimeSeconds = ...
+            rotateAngleTimeSeconds = ...
                 abs(angleDegrees) / LegoRobot.DEGREES_ROTATE_PER_SECOND;
-            pause(rotateTimeSeconds);
+            pause(rotateAngleTimeSeconds);
             obj.allStop();
         end
     end

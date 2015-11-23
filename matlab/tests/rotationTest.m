@@ -1,7 +1,7 @@
 clear
 robot = LegoRobot();
-%robot.rotateTime(45);
-%robot.rotateTime(-45);
-robot.rotateTime(90);
+%robot.rotateAngleTime(45);
+%robot.rotateAngleTime(-45);
+robot.rotateAngleTime(90);
 pause(3);
-robot.rotateTime(-90);
+robot.rotateAngleTime(-90);
