@@ -8,6 +8,16 @@ classdef (Abstract) Robot < handle
         DIRECTION_CLOCKWISE = 0;
         DIRECTION_COUNTER_CLOCKWISE = 1;
     end
+    
+    methods(Static)
+        function newRobot = makeRobot(type)
+            if strcmp(type, 'lego')
+                newRobot = LegoRobot();
+            elseif strcmp(type, 'mock')
+                newRobot = MockRobot();
+            end
+        end
+    end
 
     methods (Abstract)
         getPositionState(obj)

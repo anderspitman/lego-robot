@@ -1,4 +1,4 @@
-classdef LineFollower < handle
+classdef (Abstract) LineFollower < handle
 
     properties (GetAccess=protected)
         side

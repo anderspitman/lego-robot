@@ -32,12 +32,14 @@ classdef BackAndRotateLineFollower < LineFollower
             end
 
             % TODO: How does it work with this here?
-            obj.robot.allStop();
+            % does not work.
+            %obj.robot.allStop();
         end
 
         function backUp(obj)
             obj.robot.straightReverse(obj.HIGH_POWER_PERCENT);
             pause(.1)
+            obj.robot.allStop();
         end
 
         function rotateAwayFromLine(obj)
@@ -52,6 +54,8 @@ classdef BackAndRotateLineFollower < LineFollower
             end
 
             pause(.2)
+            
+            obj.robot.allStop();
         end
 
         function arcTowardLine(obj)
