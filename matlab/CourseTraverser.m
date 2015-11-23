@@ -3,16 +3,14 @@ classdef CourseTraverser < handle
     properties(Access=private)
         robot
         lineFollower
-        fineLineFollower
+        firstInteraction
     end
     
     methods
-        function obj = CourseTraverser()
-            obj.robot = LegoRobot();
-            %obj.lineFollower = LineFollower.makeLineFollower('drive_idle',...
-            %                                                 obj.robot);
-            obj.lineFollower = BackAndRotateLineFollower(obj.robot);
-            obj.fineLineFollower = FineLineFollower(obj.robot);
+        function obj = CourseTraverser(robot, lineFollower)
+            obj.robot = robot;
+            obj.lineFollower = lineFollower;
+            obj.firstInteraction = Interaction.makeInteraction('first', robot);
         end
         
         function traverse(obj)
@@ -20,17 +18,9 @@ classdef CourseTraverser < handle
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToInteraction();
             
-            %obj.fineLineFollower.followLineToInteraction();
-            
-            obj.fineAlign();
-            
-            %obj.doFirstInteraction();
-            
-            %obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
-            %obj.lineFollower.followLineToInteraction();
+            obj.doFirstInteraction();
             
             obj.robot.allStop();
-            %obj.robot.shutdown();
         end
         
         function rotateCCWDegrees(obj, speed, degrees)
@@ -149,13 +139,7 @@ classdef CourseTraverser < handle
         end
         
         function doFirstInteraction(obj)
-            obj.robot.forwardCentimetersTime(20);
-            obj.robot.rotateTime(-90);
-            obj.robot.forwardCentimetersTime(35);
-            obj.robot.rotateTime(-120);
-            obj.robot.forwardCentimetersTime(40);
-            obj.robot.rotateTime(-90);
-            obj.robot.forwardCentimetersTime(20);
+            obj.firstInteraction.complete();
         end
         
         function doSecondInteraction(obj)

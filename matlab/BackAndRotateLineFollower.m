@@ -1,7 +1,7 @@
 classdef BackAndRotateLineFollower < LineFollower
     properties (Constant)
-        DRIVE_POWER_PERCENT = 20;
-        IDLE_POWER_PERCENT = 15;
+        HIGH_POWER_PERCENT = 60;
+        LOW_POWER_PERCENT = 20;
     end
 
     methods
@@ -10,35 +10,60 @@ classdef BackAndRotateLineFollower < LineFollower
 
         end
         
-        function findLine(obj)
+        function followLineToInteraction(obj)
+            foundInteraction = false;
+           
+            while ~foundInteraction
+                foundInteraction = obj.iterate();
+            end
         end
 
-        function followLine(obj)
-        end
-        
-        function followLineToInteraction(obj)
-            
+        function foundInteraction = iterate(obj)
             foundInteraction = false;
 
-            while ~foundInteraction
-                positionState = obj.robot.getPositionState();
-                
-                if positionState == Robot.STATE_ON_LINE
-                    obj.robot.straightBack(60);
-                    pause(.1)
-                    obj.robot.leftMotorReverse(60);
-                    obj.robot.rightMotorForward(60);
-                    pause(.2)
-                elseif positionState == Robot.STATE_OFF_LINE
-                    obj.robot.leftMotorForward(60);
-                    obj.robot.rightMotorForward(20);
-                elseif positionState == Robot.STATE_ON_INTERACTION
-                    foundInteraction = true;
-                end
+            positionState = obj.robot.getPositionState();
+            if positionState == Robot.STATE_ON_LINE
+                obj.backUp();
+                obj.rotateAwayFromLine();
+            elseif positionState == Robot.STATE_OFF_LINE
+                obj.arcTowardLine();
+            elseif positionState == Robot.STATE_ON_INTERACTION
+                foundInteraction = true;
             end
-            
+
+            % TODO: How does it work with this here?
             obj.robot.allStop();
+        end
+
+        function backUp(obj)
+            obj.robot.straightReverse(obj.HIGH_POWER_PERCENT);
+            pause(.1)
+        end
+
+        function rotateAwayFromLine(obj)
+            if obj.side == LineFollower.SIDE_LEFT
+                obj.robot.leftMotorReverse(obj.HIGH_POWER_PERCENT);
+                obj.robot.rightMotorForward(obj.HIGH_POWER_PERCENT);
+            elseif obj.side == LineFollower.SIDE_RIGHT
+                obj.robot.leftMotorForward(obj.HIGH_POWER_PERCENT);
+                obj.robot.rightMotorReverse(obj.HIGH_POWER_PERCENT);
+            else
+                error('Invalid line side');
+            end
+
+            pause(.2)
+        end
+
+        function arcTowardLine(obj)
+            if obj.side == LineFollower.SIDE_LEFT
+                obj.robot.leftMotorForward(obj.HIGH_POWER_PERCENT);
+                obj.robot.rightMotorForward(obj.LOW_POWER_PERCENT);
+            elseif obj.side == LineFollower.SIDE_RIGHT
+                obj.robot.rightMotorForward(obj.HIGH_POWER_PERCENT);
+                obj.robot.leftMotorForward(obj.LOW_POWER_PERCENT);
+            else
+                error('Invalid line side');
+            end
         end
     end
 end
-

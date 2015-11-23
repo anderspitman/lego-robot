@@ -11,25 +11,6 @@ classdef DriveIdleLineFollower < LineFollower
 
         end
         
-        function findLine(obj)
-            foundLine = false;
-            
-            while ~foundLine
-                positionState = obj.robot.getPositionState();
-                if positionState == Robot.STATE_ON_LINE
-                    foundLine = true;
-                else
-                    obj.robot.straightForward(20);
-                end
-            end
-        end
-
-        function followLine(obj)
-            while true
-                obj.iterate();
-            end
-        end
-        
         function followLineToInteraction(obj)
             foundInteraction = false;
            
