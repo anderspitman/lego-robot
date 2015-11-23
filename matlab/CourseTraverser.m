@@ -18,16 +18,17 @@ classdef CourseTraverser < handle
         
         function traverse(obj)
             
-            obj.lineFinder.findLine();
+            %obj.lineFinder.findLine();
             
-            obj.crossOverLine();
+            %obj.crossOverLine();
             
-            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
+            obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
             
             obj.lineFollower.followLineToInteraction();
 
             
-            obj.doFirstInteraction();
+            %obj.doFirstInteraction();
+            obj.orientToInteractionDistance();
             
             obj.robot.allStop();
         end
@@ -43,6 +44,16 @@ classdef CourseTraverser < handle
             obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, speed);
             obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, speed);
             pause((degrees / speed) * LegoRobot.POWER_SECONDS_PER_DEGREE);
+            obj.robot.allStop();
+        end
+        
+        function rotateCCWDegreesState(obj, degrees, speed, state)
+            movetime = (degrees / speed) * LegoRobot.POWER_SECONDS_PER_DEGREE;
+            start = clock;
+            while etime(clock, start) <= movetime && obj.robot.getPositionState == state;
+                obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
+                obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
+            end
             obj.robot.allStop();
         end
         
@@ -73,7 +84,7 @@ classdef CourseTraverser < handle
             end
             obj.robot.allStop();
  
-            % right side mounted US sensor
+            % right side mounted UlS sensor
             obj.rotateCCWDegrees(45, 20);
             minDistanceToTarget = 15;
             aligned = false;
@@ -92,10 +103,7 @@ classdef CourseTraverser < handle
                 % rotate a little more centered
                 rot = acosd(12.5 / d);
                 fprintf('rotating %d degrees\n', rot);
-                i = 0;
-                while i < rot || obj.robot.getPositionState() ~= Robot.STATE_ON_INTERACTION
-                    obj.rotateCCWDegrees(0.1, 10);
-                end
+                obj.rotateCCWDegreesState(rot, 15, Robot.STATE_ON_INTERACTION);
                 
                 % make sure we dont go over the red line
                 aligned = true;
@@ -104,7 +112,7 @@ classdef CourseTraverser < handle
         
         function orientToInteractionFollow(obj)
             %XXX: we assume the interactions are always on the left and
-            % for simplicity
+            % for simplicity--
             s = obj.lineFollower.getSide();
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
 
@@ -150,7 +158,7 @@ classdef CourseTraverser < handle
             obj.robot.rotateCWDegrees(45, 20);
         end
         
-        function crossOverLine(obj)
+        function crossOverLineOld(obj)
             speed = 15;
             % drive until we hit the line
             % FIXME: add a failsafe in case we're already on or past the
@@ -199,7 +207,8 @@ classdef CourseTraverser < handle
         function doThirdInteraction(obj)
             % follow the same methodology as above
             % just dont lower the arm as you back out
-
+        end
+        
         function crossOverLine(obj)
             positionState = obj.robot.getPositionState();
             
