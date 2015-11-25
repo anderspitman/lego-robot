@@ -32,7 +32,7 @@ classdef TestBackAndRotateLineFollower < matlab.unittest.TestCase
             lineFollower = LineFollower.makeLineFollower('back_and_rotate',...
                                                          robot);
             robot.setPositionState(Robot.STATE_ON_LINE);
-            lineFollower.setSide(LineFollower.SIDE_LEFT);
+            lineFollower.setSideState(LineLeft());
             foundInteraction = lineFollower.iterate();
             obj.verifyFalse(foundInteraction);
             obj.verifyEqual(robot.straightReverseCalledWith(), 60);
@@ -45,7 +45,7 @@ classdef TestBackAndRotateLineFollower < matlab.unittest.TestCase
             lineFollower = LineFollower.makeLineFollower('back_and_rotate',...
                                                          robot);
             robot.setPositionState(Robot.STATE_OFF_LINE);
-            lineFollower.setSide(LineFollower.SIDE_LEFT);
+            lineFollower.setSideState(LineLeft());
             foundInteraction = lineFollower.iterate();
             obj.verifyFalse(foundInteraction);
             obj.verifyEqual(robot.leftMotorForwardCalledWith(), 60);
@@ -57,7 +57,7 @@ classdef TestBackAndRotateLineFollower < matlab.unittest.TestCase
             lineFollower = LineFollower.makeLineFollower('back_and_rotate',...
                                                          robot);
             robot.setPositionState(Robot.STATE_ON_LINE);
-            lineFollower.setSide(LineFollower.SIDE_RIGHT);
+            lineFollower.setSideState(LineRight());
             foundInteraction = lineFollower.iterate();
             obj.verifyFalse(foundInteraction);
             obj.verifyEqual(robot.straightReverseCalledWith(), 60);
@@ -70,7 +70,7 @@ classdef TestBackAndRotateLineFollower < matlab.unittest.TestCase
             lineFollower = LineFollower.makeLineFollower('back_and_rotate',...
                                                          robot);
             robot.setPositionState(Robot.STATE_OFF_LINE);
-            lineFollower.setSide(LineFollower.SIDE_RIGHT);
+            lineFollower.setSideState(LineRight());
             foundInteraction = lineFollower.iterate();
             obj.verifyFalse(foundInteraction);
             obj.verifyEqual(robot.rightMotorForwardCalledWith(), 60);
@@ -82,7 +82,7 @@ classdef TestBackAndRotateLineFollower < matlab.unittest.TestCase
             lineFollower = LineFollower.makeLineFollower('back_and_rotate',...
                                                          robot);
             robot.setPositionState(Robot.STATE_ON_INTERACTION);
-            lineFollower.setSide(LineFollower.SIDE_LEFT);
+            lineFollower.setSideState(LineLeft());
             foundInteraction = lineFollower.iterate();
             obj.verifyTrue(foundInteraction);
         end

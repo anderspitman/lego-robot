@@ -43,31 +43,11 @@ classdef BackAndRotateLineFollower < LineFollower
         end
 
         function rotateAwayFromLine(obj)
-            if obj.side == LineFollower.SIDE_LEFT
-                obj.robot.leftMotorReverse(obj.HIGH_POWER_PERCENT);
-                obj.robot.rightMotorForward(obj.HIGH_POWER_PERCENT);
-            elseif obj.side == LineFollower.SIDE_RIGHT
-                obj.robot.leftMotorForward(obj.HIGH_POWER_PERCENT);
-                obj.robot.rightMotorReverse(obj.HIGH_POWER_PERCENT);
-            else
-                error('Invalid line side');
-            end
-
-            pause(.2)
-            
-            obj.robot.allStop();
+            obj.sideState.rotateAwayFromLine(obj.robot);
         end
 
         function arcTowardLine(obj)
-            if obj.side == LineFollower.SIDE_LEFT
-                obj.robot.leftMotorForward(obj.HIGH_POWER_PERCENT);
-                obj.robot.rightMotorForward(obj.LOW_POWER_PERCENT);
-            elseif obj.side == LineFollower.SIDE_RIGHT
-                obj.robot.rightMotorForward(obj.HIGH_POWER_PERCENT);
-                obj.robot.leftMotorForward(obj.LOW_POWER_PERCENT);
-            else
-                error('Invalid line side');
-            end
+            obj.sideState.arcTowardLine(obj.robot);
         end
     end
 end
