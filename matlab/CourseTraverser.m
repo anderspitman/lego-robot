@@ -57,6 +57,20 @@ classdef CourseTraverser < handle
             obj.robot.allStop();
         end
         
+        function rotateCCWDistance(obj, speed, distance)
+            d = obj.robot.getDistanceState();
+            fprintf('%d %d', d, distance);
+            while d < 0 || d > distance
+                fprintf('iterating: %d\n', d);
+                obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
+                obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
+                d = obj.robot.getDistanceState();
+                %pause(0.01);
+            end
+            fprintf('stopped at distance: %d\n', d);
+            obj.robot.allStop();
+        end
+        
         function orientToInteractionArmAlign(obj)
             obj.robot.rotateCCWDegrees(80, 20);
 
@@ -64,15 +78,25 @@ classdef CourseTraverser < handle
             obj.robot.rotateCCWDegrees(20, 20);
         end
         
-        function orientDistanceIteration(obj, distance)           
-            % we're too far to the right (detecting nothing)
-            % rotate CCW until we're facing something
+        function orientDistanceIteration(obj, speed, distance, state)           
             d = obj.robot.getDistanceState();
-            while (d < 0 || d > distance)
-                obj.rotateCCWDegrees(30, 10);
+            hitState = false;
+            leftState = false;
+            fprintf('%d %d', d, distance);
+            while (d < 0 || d > distance) && ~leftState
+                fprintf('iterating: %d %d\n', d, obj.robot.getPositionState());
+                obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
+                obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
                 d = obj.robot.getDistanceState();
-                fprintf('cur: %d, target: %d\n', d, distance);
+                if obj.robot.getPositionState() == state
+                    hitState = true;
+                end
+                if hitState && obj.robot.getPositionState() ~= state
+                    leftState = true;
+                end
+                %pause(0.01);
             end
+            fprintf('stopped at distance: %d\n', d);
             obj.robot.allStop();
         end
         
@@ -85,29 +109,32 @@ classdef CourseTraverser < handle
             obj.robot.allStop();
  
             % right side mounted UlS sensor
-            obj.rotateCCWDegrees(45, 20);
+            %obj.rotateCCWDegrees(45, 20);
             minDistanceToTarget = 15;
             aligned = false;
             while ~aligned
                 d = obj.robot.getDistanceState();
                 fprintf('%d\n', d);
                 if d < 0 || d > minDistanceToTarget
-                    obj.orientDistanceIteration(minDistanceToTarget);
+                    obj.orientDistanceIteration(5, minDistanceToTarget, Robot.STATE_ON_INTERACTION)
+                    %obj.rotateCCWDistance(5, minDistanceToTarget);
+                    %obj.orientDistanceIteration(minDistanceToTarget);
                     %obj.robot.forwardCentimetersDegrees(2, 10);
                     %obj.orientDistanceIteration(minDistanceToTarget / 1.5);
                     %obj.robot.forwardCentimetersDegrees(2, 10);
                     %obj.orientDistanceIteration(minDistanceToTarget / 2);
                     %obj.robot.forwardCentimetersDegrees(2, 10);
                 end
+                pause(0.5);
                 d = obj.robot.getDistanceState();
                 % rotate a little more centered
-                rot = acosd(12.5 / d);
-                fprintf('rotating %d degrees\n', rot);
-                obj.rotateCCWDegreesState(rot, 15, Robot.STATE_ON_INTERACTION);
+                %rot = acosd(12.5 / d);
+                %fprintf('rotating %d degrees\n', rot);
+                %obj.rotateCCWDegreesState(rot, 25, Robot.STATE_ON_INTERACTION);
                 
-                % make sure we dont go over the red line
                 aligned = true;
             end
+            %obj.robot.reverseCentimetersDegrees((12.5 - d) + 5, 20);
         end
         
         function orientToInteractionFollow(obj)
