@@ -4,7 +4,8 @@ classdef (Abstract) Robot < handle
         STATE_ON_LINE = 0;
         STATE_OFF_LINE = 1;
         STATE_ON_INTERACTION = 2;
-        STATE_INVALID = 3;
+        STATE_ON_FINISH = 3;
+        STATE_INVALID = 4;
         DIRECTION_CLOCKWISE = 0;
         DIRECTION_COUNTER_CLOCKWISE = 1;
     end

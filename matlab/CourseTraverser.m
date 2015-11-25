@@ -41,12 +41,19 @@ classdef CourseTraverser < handle
             
             obj.crossOverLine();
             
+            disp('here1');
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
-            
             obj.lineFollower.followLineToInteraction();
-
             
-            obj.doFirstInteraction();
+            %obj.doFirstInteraction();
+            
+            disp('here2');
+            obj.robot.straightForward(60);
+            pause(.5)
+            
+            disp('here3');
+            obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
+            obj.lineFollower.followLineToInteraction();
             
             obj.robot.allStop();
         end

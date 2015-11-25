@@ -6,6 +6,7 @@ classdef LegoRobot < Robot
         COLOR_LINE = 2; % BLUE (lego.NXT.SENSOR_TYPE_COLORBLUE;)
         COLOR_INTERACT = 5; % RED (lego.NXT.SENSOR_TYPE_COLORRED;)
         COLOR_BACKGROUND = 6; % WHITE (lego.NXT.SENSOR_TYPE_LIGHT_INACTIVE;)
+        COLOR_FINISH = 1;
 
         LEFT_MOTOR = lego.NXT.OUT_A;
         RIGHT_MOTOR = lego.NXT.OUT_C;
@@ -64,6 +65,8 @@ classdef LegoRobot < Robot
                 positionState = Robot.STATE_ON_INTERACTION;
             elseif color == LegoRobot.COLOR_BACKGROUND
                 positionState = Robot.STATE_OFF_LINE;
+            elseif color == LegoRobot.COLOR_FINISH
+                positionState = Robot.STATE_ON_FINISH;
             else
                 %fprintf('Not processing color %d\n', color);
                 positionState = Robot.STATE_INVALID;
