@@ -8,6 +8,10 @@ classdef (Abstract) LineFinder < handle
         function newLineFinder = makeLineFinder(type, robot)
             if strcmp(type, 'basic')
                 newLineFinder = BasicLineFinder(robot);
+            elseif strcmp(type, 'mock')
+                newLineFinder = MockLineFinder(robot);
+            else
+                error('Invalid LineFinder type');
             end
         end
     end
