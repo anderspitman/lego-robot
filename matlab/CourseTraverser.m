@@ -42,19 +42,38 @@ classdef CourseTraverser < handle
             obj.crossOverLine();
             
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
-            obj.lineFollower.followLineToInteraction();
-%             
-%             %obj.doFirstInteraction();
-%             
-             obj.robot.straightForward(60);
-             pause(.5)
-%             
-%             obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
-%             obj.lineFollower.followLineToInteraction();
+            obj.lineFollower.followLineToInteraction();          
+             obj.skipFirstInteraction();
+             
+              obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
+              obj.lineFollower.followLineToInteraction();
+              
+              obj.skipInteraction();
+              obj.lineFollower.followLineToInteraction();
+              
+             obj.skipInteraction();
+             obj.robot.curveLeft(60, 50);
+             pause(2);
+             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
+             obj.lineFollower.followLineToFinish();
+             
 %             obj.orientToInteractionDistance(24, true);
 %             
-%             obj.robot.allStop();
+             obj.robot.allStop();
         end
+        
+        function skipFirstInteraction(obj)
+            obj.robot.rotateAngleTime(20);
+            obj.robot.curveRight(60, 20);
+            pause(2.0)
+        end
+        
+        function skipInteraction(obj)
+            obj.robot.rotateAngleTime(-30);
+            obj.robot.straightForward(60);
+            pause(.5);
+        end
+        
         
         function rotateCCWDegreesState(obj, degrees, speed, state)
             movetime = (degrees / speed) * LegoRobot.POWER_SECONDS_PER_DEGREE;

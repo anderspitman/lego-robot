@@ -11,7 +11,7 @@ classdef BasicLineFinder < LineFinder
             positionState = obj.robot.getPositionState();
             
             while positionState ~= Robot.STATE_ON_LINE
-                obj.robot.curveLeft(40, 30);
+                obj.robot.curveLeft(60, 30);
                 positionState = obj.robot.getPositionState();
             end
             

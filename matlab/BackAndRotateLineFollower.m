@@ -64,7 +64,7 @@ classdef BackAndRotateLineFollower < LineFollower
         function hitWall = checkStateTransitionTime(obj, state)
             hitWall = false;
             runTime = toc;
-            if runTime > 5
+            if runTime > 10
                 hitWall = true;
             end
             %fprintf('State: %d, Prev: %d\n', state, obj.prevState);
