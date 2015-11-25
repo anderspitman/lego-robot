@@ -171,31 +171,7 @@ classdef CourseTraverser < handle
         function doFirstInteraction(obj)
             obj.firstInteraction.complete();
         end
-        
-        function doSecondInteraction(obj)
-            % assume we're already lined up perfectly with the cage
-            % FIXME: add arm movemnt commands
-            % lower arm to be inside the cage
-            obj.robot.rotateArm(120, 20);
-            % lower until it is lined up vertically
-            % drive forward to pick up the box
-            obj.robot.moveDegrees(270, 20);
-            % lift the arm up
-            obj.robot.rotateArm(-120, 20);
-            % back up until we are out of the cage
-            obj.robot.straightBack(15);
-            % (while moving back) lower the arm 
-            % continue backing up
-            obj.robot.allStop();
-            % get back to the line
-            obj.returnToLine();
-        end
-        
-        function doThirdInteraction(obj)
-            % follow the same methodology as above
-            % just dont lower the arm as you back out
-        end
-        
+                
         function crossOverLine(obj)
             positionState = obj.robot.getPositionState();
             
