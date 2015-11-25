@@ -16,6 +16,10 @@ classdef (Abstract) LineFollower < handle
                 newLineFollower = DriveIdleLineFollower(robot);
             elseif strcmp(type, 'back_and_rotate')
                 newLineFollower = BackAndRotateLineFollower(robot);
+            elseif strcmp(type, 'mock')
+                newLineFollower = MockLineFollower(robot);
+            else
+                error('Invalid LineFollower type');
             end
         end
     end
