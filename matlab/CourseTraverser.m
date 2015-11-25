@@ -52,20 +52,6 @@ classdef CourseTraverser < handle
             obj.robot.allStop();
         end
         
-        function rotateCCWDegrees(obj, degrees, speed)
-            obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
-            obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
-            pause((degrees / speed) * LegoRobot.POWER_SECONDS_PER_DEGREE);
-            obj.robot.allStop();
-        end
-        
-        function rotateCWDegrees(obj, degrees, speed)
-            obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, speed);
-            obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, speed);
-            pause((degrees / speed) * LegoRobot.POWER_SECONDS_PER_DEGREE);
-            obj.robot.allStop();
-        end
-        
         function rotateCCWDegreesState(obj, degrees, speed, state)
             movetime = (degrees / speed) * LegoRobot.POWER_SECONDS_PER_DEGREE;
             start = clock;
@@ -134,22 +120,7 @@ classdef CourseTraverser < handle
                 positionState = obj.robot.getPositionState();
             end
         end
-        
-        function returnToLine(obj)
-            % post-interaction line return
-            % backs up until we pass the line, then rotates toward the
-            % course direction
-            speed = 15;
-            while obj.robot.getPositionState() == Robot.STATE_OFF_LINE
-                obj.robot.straightBackwardRegulated(speed);
-            end
-            
-            while obj.robot.getPositionState() ~= Robot.STATE_OFF_LINE
-                obj.robot.straightBackwardRegulated(speed);
-            end
-            obj.robot.rotateCWDegrees(45, 20);
-        end
-        
+                
         function crossOverLineOld(obj)
             speed = 15;
             % drive until we hit the line
