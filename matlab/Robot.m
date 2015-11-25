@@ -41,6 +41,7 @@ classdef (Abstract) Robot < handle
         rightMotorForward(obj, powerPercent)
         rightMotorReverse(obj, powerPercent)
         allStop(obj)
+        getBatteryLife(obj)
         rotateArm(obj, angleDegrees, powerPercent)
     end
 end
