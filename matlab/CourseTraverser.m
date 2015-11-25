@@ -37,27 +37,87 @@ classdef CourseTraverser < handle
         
         function traverse(obj)
             
-%            obj.lineFinder.findLine();
+            obj.lineFollower.followLineToInteraction();
+            obj.fineAlign();
+%            obj.orientToInteractionDistance(15, 'right', true);
+% %            obj.lineFinder.findLine();
+%             
+% %            obj.crossOverLine();
+%             
+%             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
+%             obj.lineFollower.followLineToInteraction();          
+%              obj.skipFirstInteraction();
+%              
+%               obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
+%               obj.lineFollower.followLineToInteraction();
+%               
+%               obj.skipInteraction();
+%               obj.lineFollower.followLineToInteraction();
+%               
+%              obj.skipInteraction();
+%              obj.robot.curveLeft(60, 50);
+%              pause(2);
+%              obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
+%              obj.lineFollower.followLineToFinish();
+%              
+%              obj.robot.allStop();
+        end
+         
+        function fineAlign(obj)
+            speed = 1;
+%             positionState = obj.robot.getPositionState();
+%             while positionState ~= Robot.STATE_ON_INTERACTION
+%                 obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, speed);
+%                 obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, speed);
+%                 positionState = obj.robot.getPositionState();
+%             end
+%             
+%             while positionState == Robot.STATE_ON_INTERACTION
+% %                 obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, speed);
+% %                 obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, speed);
+%                 obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
+%                 obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
+%                 positionState = obj.robot.getPositionState();
+%             end
             
-%            obj.crossOverLine();
+            done = false;
+            while ~done
+                done = obj.alignIteration();
+            end
             
-            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
-            obj.lineFollower.followLineToInteraction();          
-             obj.skipFirstInteraction();
-             
-              obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
-              obj.lineFollower.followLineToInteraction();
-              
-              obj.skipInteraction();
-              obj.lineFollower.followLineToInteraction();
-              
-             obj.skipInteraction();
-             obj.robot.curveLeft(60, 50);
-             pause(2);
-             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
-             obj.lineFollower.followLineToFinish();
-             
-             obj.robot.allStop();
+            obj.robot.allStop();
+            
+        end
+        
+        function done = alignIteration(obj)
+            slowSpeed = 1;
+            fastSpeed = 3;
+            positionState = Robot.STATE_OFF_LINE;
+            done = false;
+            while positionState ~= Robot.STATE_ON_INTERACTION && ~done
+%                 obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, slowSpeed);
+%                 obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, slowSpeed);
+                obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, 4);
+                obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, 5);
+                positionState = obj.robot.getPositionState();
+                
+            end            
+            
+            tic;
+            while positionState == Robot.STATE_ON_INTERACTION && ~done
+%                 obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, fastSpeed);
+%                 obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, slowSpeed);
+                obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, 2);
+                obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, 4);
+                positionState = obj.robot.getPositionState();
+                time = toc;
+                if time > 2.8
+                    done = true;
+                end
+            end
+            
+            fprintf('Time: %f\n', time);
+            
         end
         
         function skipFirstInteraction(obj)
@@ -147,6 +207,7 @@ classdef CourseTraverser < handle
                 
                 % check that we rotate on and past the interaction marker
                 d = obj.robot.getDistanceState();
+                pause(.01);
             end
             fprintf('stopped at distance: %d\n', d);
             foundD = d;
