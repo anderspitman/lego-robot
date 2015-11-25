@@ -37,19 +37,23 @@ classdef CourseTraverser < handle
         
         function traverse(obj)
             
-            %obj.lineFinder.findLine();
+            obj.lineFinder.findLine();
             
-            %obj.crossOverLine();
+            obj.crossOverLine();
             
-            obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
-            
+            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToInteraction();
-
-            
-            %obj.doFirstInteraction();
-            obj.orientToInteractionDistance(24, true);
-            
-            obj.robot.allStop();
+%             
+%             %obj.doFirstInteraction();
+%             
+             obj.robot.straightForward(60);
+             pause(.5)
+%             
+%             obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
+%             obj.lineFollower.followLineToInteraction();
+%             obj.orientToInteractionDistance(24, true);
+%             
+%             obj.robot.allStop();
         end
         
         function rotateCCWDegreesState(obj, degrees, speed, state)
