@@ -23,10 +23,9 @@ classdef BackAndRotateLineFollower < LineFollower
 
             positionState = obj.robot.getPositionState();
             if positionState == Robot.STATE_ON_LINE
-                obj.backUp();
-                obj.rotateAwayFromLine();
+                obj.state.iterate(obj);
             elseif positionState == Robot.STATE_OFF_LINE
-                obj.arcTowardLine();
+                %obj.arcTowardLine();
             elseif positionState == Robot.STATE_ON_INTERACTION
                 foundInteraction = true;
             end

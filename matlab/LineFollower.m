@@ -3,6 +3,7 @@ classdef (Abstract) LineFollower < handle
     properties (GetAccess=protected)
         side
         robot
+        state
     end
 
     properties (Constant)
@@ -32,6 +33,7 @@ classdef (Abstract) LineFollower < handle
         function obj = LineFollower(robot)
             obj.robot = robot;
             obj.side = LineFollower.SIDE_LEFT;
+            obj.state = OnLine();
         end
 
         function side = getSide(obj)
