@@ -37,9 +37,9 @@ classdef CourseTraverser < handle
         
         function traverse(obj)
             
-            obj.lineFinder.findLine();
+%            obj.lineFinder.findLine();
             
-            obj.crossOverLine();
+%            obj.crossOverLine();
             
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToInteraction();          
@@ -57,8 +57,6 @@ classdef CourseTraverser < handle
              obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
              obj.lineFollower.followLineToFinish();
              
-%             obj.orientToInteractionDistance(24, true);
-%             
              obj.robot.allStop();
         end
         
@@ -84,47 +82,66 @@ classdef CourseTraverser < handle
             end
             obj.robot.allStop();
         end
-                
-        function orientToInteractionDistance(obj, targetDistance, trigCorrect)
-            % drive over the red line
-            obj.robot.getPositionState();
-            while (obj.robot.getPositionState() == Robot.STATE_ON_INTERACTION)
-                obj.robot.straightForwardRegulated(10);
+        
+        function rotateToFace(obj, speed, side)
+            if strcmp(side, 'left')
+                obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
+                obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
+            elseif strcmp(side, 'right')
+                obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, speed);
+                obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, speed);
             end
+        end
+        
+        function orientToInteractionDistance(obj, targetDistance, side, trigCorrect)
+            % drive over the red line
+            obj.robot.getPositionState();        
+            obj.robot.straightForwardRegulated(10);
+            while (obj.robot.getPositionState() == Robot.STATE_ON_INTERACTION)
+            end
+            pause(0.5); % keep drivin a little
             obj.robot.allStop();
             
             % rotate till you dudes
             % rotate until we detect something within targetDistance
             d = obj.robot.getDistanceState();
             if d < 0 || d > targetDistance % -1 is no detect
-                obj.orientDistanceIteration(5, targetDistance)
+                d = obj.orientDistanceIteration(5, targetDistance, side)
             end
             
             pause(0.5);
             
             if trigCorrect
+                speed = 10;
+                state = Robot.STATE_ON_INTERACTION;
+                lineToSensorDistance = 10;
                 % rotate a little more centered
-                d = obj.robot.getDistanceState();
-                rot = acosd(12.5 / d);
+                rot = acosd((targetDistance - lineToSensorDistance) / d);
                 fprintf('rotating %d degrees\n', rot);
                 
                 % rotates but dumps out if we pass the interaction
-                obj.rotateCCWDegreesState(rot, 25, Robot.STATE_ON_INTERACTION);
+                % FIXME: this DOESN'T go the specified degrees, but it
+                % seems to work well. degrees = robot degrees
+                movetime = (rot / speed) * LegoRobot.POWER_SECONDS_PER_DEGREE;
+                start = clock;
+                obj.rotateToFace(speed, side);
+                while etime(clock, start) <= movetime && obj.robot.getPositionState == state;
+                end
+                obj.robot.allStop();
             end
             
             rDist = (targetDistance - d) + 5;
             fprintf('backing up %d robot centimeters', rDist);
-            obj.robot.reverseCentimetersDegrees(rDist, 20);
+            %obj.robot.reverseCentimetersDegrees(rDist, 20);
         end     
         
-        function orientDistanceIteration(obj, speed, distance)
+        function foundD = orientDistanceIteration(obj, speed, distance, side)
             d = obj.robot.getDistanceState();
             fprintf('distances: cur: %d dest: %d', d, distance);
             
             % continuously rotate CCW
-            obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
-            obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
-                
+            obj.rotateToFace(speed, side);
+            
             while d < 0 || d > distance % -1 is no detect
                 fprintf('iterating: %d %d\n', d, obj.robot.getPositionState());
                 
@@ -132,6 +149,8 @@ classdef CourseTraverser < handle
                 d = obj.robot.getDistanceState();
             end
             fprintf('stopped at distance: %d\n', d);
+            foundD = d;
+            
             obj.robot.allStop();
         end
         
