@@ -28,7 +28,7 @@ classdef CourseTraverser < handle
 
             
             %obj.doFirstInteraction();
-            obj.orientToInteractionDistance(true);
+            obj.orientToInteractionDistance(24, true);
             
             obj.robot.allStop();
         end
@@ -81,7 +81,7 @@ classdef CourseTraverser < handle
             obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
             obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
                 
-            while (d < 0 || d > distance) && ~leftState
+            while (d < 0 || d > distance)
                 fprintf('iterating: %d %d\n', d, obj.robot.getPositionState());
                 
                 % check that we rotate on and past the interaction marker
@@ -135,20 +135,31 @@ classdef CourseTraverser < handle
             obj.robot.allStop();
         end
         
-        function orientToInteractionDistance(obj, trigCorrect)
+        function orientToInteractionDistance(obj, targetDistance, trigCorrect)
             % drive over the red line
             obj.robot.getPositionState();
             while (obj.robot.getPositionState() == Robot.STATE_ON_INTERACTION)
                 obj.robot.straightForwardRegulated(10);
             end
             obj.robot.allStop();
- 
+            
+            %XXX: trying this pivoted then backup thing
+            %obj.robot.motorReverseRegulated(10);
+            %pause(0.001);
+            %while (obj.robot.getPositionState() == Robot.STATE_ON_INTERACTION)
+            %end
+            %obj.robot.allStop();
+            %while (obj.robot.getPositionState() == Robot.STATE_ON_INTERACTION)
+            %    obj.robot.straightForwardRegulated(10);
+            %end
+            %obj.robot.allStop();
+            
             % right side mounted UlS sensor
             %obj.rotateCCWDegrees(45, 20);
-            minDistanceToTarget = 15;
+            %targetDistance = 15;
             d = obj.robot.getDistanceState();
-            if d < 0 || d > minDistanceToTarget
-                obj.orientDistanceIteration(5, minDistanceToTarget, Robot.STATE_ON_INTERACTION)
+            if d < 0 || d > targetDistance
+                obj.orientDistanceIteration(5, targetDistance, Robot.STATE_ON_INTERACTION)
                 %obj.rotateCCWDistance(5, minDistanceToTarget);
                 %obj.orientDistanceIteration(minDistanceToTarget);
                 %obj.robot.forwardCentimetersDegrees(2, 10);
@@ -168,7 +179,9 @@ classdef CourseTraverser < handle
                 obj.rotateCCWDegreesState(rot, 25, Robot.STATE_ON_INTERACTION);
             end
             
-            obj.robot.reverseCentimetersDegrees((12.5 - d) + 5, 20);
+            rDist = (targetDistance - d) + 5;
+            fprintf('backing up %d robot centimeters', rDist);
+            obj.robot.reverseCentimetersDegrees(rDist, 20);
         end
         
         function orientToInteractionFollow(obj)
