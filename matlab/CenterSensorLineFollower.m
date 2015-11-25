@@ -24,7 +24,7 @@ classdef CenterSensorLineFollower < LineFollower
                 positionState = obj.robot.getPositionState();
                 
                 if positionState == Robot.STATE_ON_LINE
-                    obj.robot.straightBack(60);
+                    obj.robot.straightReverse(60);
                     pause(.1)
                     obj.robot.leftMotorReverse(60);
                     obj.robot.rightMotorForward(60);

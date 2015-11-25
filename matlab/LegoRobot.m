@@ -6,17 +6,21 @@ classdef LegoRobot < Robot
         COLOR_LINE = 2; % BLUE (lego.NXT.SENSOR_TYPE_COLORBLUE;)
         COLOR_INTERACT = 5; % RED (lego.NXT.SENSOR_TYPE_COLORRED;)
         COLOR_BACKGROUND = 6; % WHITE (lego.NXT.SENSOR_TYPE_LIGHT_INACTIVE;)
-        COLOR_FINISH = 1;
+        COLOR_FINISH = 1;  
+        ULTRASONIC_PORT = lego.NXT.IN_2;
 
         LEFT_MOTOR = lego.NXT.OUT_A;
         RIGHT_MOTOR = lego.NXT.OUT_C;
         BOTH_MOTORS = lego.NXT.OUT_AC;
+        
+        ARM_MOTOR = lego.NXT.OUT_B;
         
         MOTOR_POWER_PERCENT = 60;
         
         CENTIMETERS_PER_SECOND = 17.75;
         DEGREES_ROTATE_PER_SECOND = 190;
         ROTATE_TIME_PERCENT_POWER = 60;
+        POWER_SECONDS_PER_DEGREE = LegoRobot.ROTATE_TIME_PERCENT_POWER / LegoRobot.DEGREES_ROTATE_PER_SECOND;
         
         TIRE_DIAMETER_CENTIMETERS = 4.3;
         TIRE_RADIUS_CENTIMETERS = LegoRobot.TIRE_DIAMETER_CENTIMETERS / 2;
@@ -34,6 +38,7 @@ classdef LegoRobot < Robot
         function obj = LegoRobot()
             obj.brick = lego.NXT(LegoRobot.BLUETOOTH_ADDRESS);
             obj.brick.setSensorColorFull(LegoRobot.COLOR_PORT);
+            obj.brick.setSensorUltrasonic(LegoRobot.ULTRASONIC_PORT);
         end
         
         function shutdown(obj)
@@ -44,6 +49,10 @@ classdef LegoRobot < Robot
             obj.brick.motorForwardReg(motorId, powerPercent);
         end
         
+        function distanceState = getDistanceState(obj)
+            distanceState = obj.brick.sensorValue(LegoRobot.ULTRASONIC_PORT);
+        end
+
         function motorReverseRegulated(obj, motorId, powerPercent)
             obj.brick.motorReverseReg(motorId, powerPercent);
         end
@@ -53,10 +62,7 @@ classdef LegoRobot < Robot
                 LegoRobot.BOTH_MOTORS, powerPercent, degrees, 0, true,...
                 true);
         end
-        
-        
-        
-        
+
         function positionState = getPositionState(obj)
             color = obj.brick.sensorValue(LegoRobot.COLOR_PORT);
             if color == LegoRobot.COLOR_LINE
@@ -218,6 +224,16 @@ classdef LegoRobot < Robot
         
         function allStop(obj)
             obj.brick.motorBrake(LegoRobot.BOTH_MOTORS);
+        end
+        
+        function rotateArm(obj, angleDegrees, powerPercent)
+            obj.brick.motorRotateExt(...
+                LegoRobot.ARM_MOTOR, powerPercent, angleDegrees, 0, ...
+                true, true);
+        end
+        
+        function battery = getBatteryLevel(obj)
+            battery = obj.brick.getBatteryLevel();
         end
     end
 end
