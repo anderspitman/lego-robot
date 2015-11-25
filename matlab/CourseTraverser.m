@@ -75,20 +75,6 @@ classdef CourseTraverser < handle
             end
             obj.robot.allStop();
         end
-        
-        function rotateCCWDistance(obj, speed, distance)
-            d = obj.robot.getDistanceState();
-            fprintf('%d %d', d, distance);
-            while d < 0 || d > distance
-                fprintf('iterating: %d\n', d);
-                obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, speed);
-                obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, speed);
-                d = obj.robot.getDistanceState();
-                %pause(0.01);
-            end
-            fprintf('stopped at distance: %d\n', d);
-            obj.robot.allStop();
-        end       
                 
         function orientToInteractionDistance(obj, targetDistance, trigCorrect)
             % drive over the red line
