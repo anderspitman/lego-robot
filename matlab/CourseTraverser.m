@@ -37,16 +37,14 @@ classdef CourseTraverser < handle
         
         function traverse(obj)
             
+
+            %obj.lineFinder.findLine();
+            
+            %obj.crossOverLine();
+            
+            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToInteraction();
-            obj.fineAlign();
-%            obj.orientToInteractionDistance(15, 'right', true);
-% %            obj.lineFinder.findLine();
-%             
-% %            obj.crossOverLine();
-%             
-%             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
-%             obj.lineFollower.followLineToInteraction();          
-%              obj.skipFirstInteraction();
+            obj.backUpABit();
 %              
 %               obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
 %               obj.lineFollower.followLineToInteraction();
@@ -59,8 +57,47 @@ classdef CourseTraverser < handle
 %              pause(2);
 %              obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
 %              obj.lineFollower.followLineToFinish();
-%              
-%              obj.robot.allStop();
+             
+             obj.robot.allStop();
+        end
+        
+        function backUpABit(obj)
+            positionState = Robot.STATE_OFF_LINE;
+            
+            while positionState ~= Robot.STATE_ON_INTERACTION
+                obj.robot.straightReverse(20);
+                positionState = obj.robot.getPositionState();
+            end
+            
+            while positionState ~= Robot.STATE_OFF_LINE
+                obj.robot.straightReverse(30);
+                positionState = obj.robot.getPositionState();
+            end
+            
+            obj.robot.leftMotorReverse(40);
+            obj.robot.rightMotorReverse(60);
+            pause(1);
+            
+            while positionState ~= Robot.STATE_ON_LINE
+                obj.robot.straightForward(30);
+                positionState = obj.robot.getPositionState();
+            end
+            
+            
+%             while positionState ~= Robot.STATE_ON_LINE
+%                 obj.robot.leftMotorReverse(70);
+%                 obj.robot.rightMotorReverse(20);
+%                 positionState = obj.robot.getPositionState();
+%             end
+%             
+%             obj.robot.rotateAngleTime(-90);
+%             
+%             while positionState ~= Robot.STATE_OFF_LINE
+%                 obj.robot.straightReverse(30);
+%                 positionState = obj.robot.getPositionState();
+%             end
+            
+            obj.robot.allStop();
         end
          
         function fineAlign(obj)
