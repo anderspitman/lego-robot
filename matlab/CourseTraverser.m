@@ -61,12 +61,13 @@ classdef CourseTraverser < handle
             obj.doSecondInteraction();
 
             obj.lineFollower.followLineToInteraction();
+            obj.doThirdInteraction();
             
             obj.fullAlignRight();
             obj.lineFollower.followLineToInteraction();
 
-%            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
-%            obj.lineFollower.followLineToFinish();
+            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
+            obj.lineFollower.followLineToFinish();
              
              obj.robot.allStop();
         end
