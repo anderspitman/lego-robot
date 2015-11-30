@@ -69,7 +69,8 @@ classdef LegoRobot < Robot
 
         function positionState = getPositionState(obj)
             color = obj.brick.sensorValue(LegoRobot.COLOR_PORT);
-            if color == LegoRobot.COLOR_LINE
+            if color == LegoRobot.COLOR_LINE || color == LegoRobot.COLOR_FINISH
+            %if color == LegoRobot.COLOR_LINE
                 positionState = Robot.STATE_ON_LINE;
             elseif color == LegoRobot.COLOR_INTERACT
                 positionState = Robot.STATE_ON_INTERACTION;
