@@ -4,6 +4,7 @@ classdef CourseTraverser < handle
         robot
         lineFinder
         lineFollower
+        aligner
         firstInteraction
         secondInteraction
         thirdInteraction
@@ -33,6 +34,7 @@ classdef CourseTraverser < handle
             obj.robot = robot;
             obj.lineFinder = lineFinder;
             obj.lineFollower = lineFollower;
+            obj.aligner = Aligner.makeAligner(robot);
             obj.firstInteraction = Interaction.makeInteraction('first',...
                                                                robot);
             obj.secondInteraction = Interaction.makeInteraction('second',...
@@ -50,6 +52,8 @@ classdef CourseTraverser < handle
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToInteraction();
             
+            obj.aligner.setSide(LineFollower.SIDE_LEFT);
+            %obj.aligner.fullAlign();
             obj.fullAlignLeft();
             
             obj.doFirstInteraction();
@@ -57,19 +61,22 @@ classdef CourseTraverser < handle
             obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
             obj.lineFollower.followLineToInteraction();
             
+            obj.aligner.setSide(LineFollower.SIDE_RIGHT);
+            %obj.aligner.fullAlign();
             obj.fullAlignRight();
             obj.doSecondInteraction();
 
             obj.lineFollower.followLineToInteraction();
             obj.doThirdInteraction();
             
+            %obj.aligner.fullAlign();
             obj.fullAlignRight();
             obj.lineFollower.followLineToInteraction();
 
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToFinish();
              
-             obj.robot.allStop();
+            obj.robot.allStop();
         end
         
         function backUpABitLeft(obj)
