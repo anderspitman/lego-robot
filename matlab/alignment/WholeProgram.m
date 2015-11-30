@@ -11,7 +11,8 @@ MOTORRIGHT = lego.NXT.OUT_C;
 brick.setSensorColorFull(COLORPORT)
 
 
-followLine1()
+%followLine1()
+followLineLeft()
 followLine2()
 %Aligns robot to center of 3rd interaction
 followLine3()

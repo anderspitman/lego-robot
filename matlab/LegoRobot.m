@@ -41,6 +41,10 @@ classdef LegoRobot < Robot
             obj.brick.setSensorUltrasonic(LegoRobot.ULTRASONIC_PORT);
         end
         
+        function brick = getBrick(obj)
+            brick = obj.brick;
+        end
+        
         function shutdown(obj)
             obj.brick.close()
         end

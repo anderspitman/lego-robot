@@ -38,13 +38,15 @@ classdef CourseTraverser < handle
         function traverse(obj)
             
 
-            %obj.lineFinder.findLine();
+            obj.lineFinder.findLine();
             
-            %obj.crossOverLine();
+            obj.crossOverLine();
             
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToInteraction();
             obj.backUpABit();
+            obj.ryanAlign();
+            obj.doFirstInteraction();
 %              
 %               obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
 %               obj.lineFollower.followLineToInteraction();
@@ -74,30 +76,28 @@ classdef CourseTraverser < handle
                 positionState = obj.robot.getPositionState();
             end
             
-            obj.robot.leftMotorReverse(40);
-            obj.robot.rightMotorReverse(60);
-            pause(1);
+            
+%             obj.robot.leftMotorReverse(40);
+%             obj.robot.rightMotorReverse(60);
+%             pause(1);
+
+            obj.robot.straightReverse(60);
+            pause(.4);
+            obj.robot.allStop();
+            obj.robot.rotateAngleTime(-50);
             
             while positionState ~= Robot.STATE_ON_LINE
                 obj.robot.straightForward(30);
                 positionState = obj.robot.getPositionState();
             end
-            
-            
-%             while positionState ~= Robot.STATE_ON_LINE
-%                 obj.robot.leftMotorReverse(70);
-%                 obj.robot.rightMotorReverse(20);
-%                 positionState = obj.robot.getPositionState();
-%             end
-%             
-%             obj.robot.rotateAngleTime(-90);
-%             
-%             while positionState ~= Robot.STATE_OFF_LINE
-%                 obj.robot.straightReverse(30);
-%                 positionState = obj.robot.getPositionState();
-%             end
-            
+
             obj.robot.allStop();
+        end
+        
+        function ryanAlign(obj)
+            %WholeProgram(obj.robot.getBrick());
+            %WholeProgram();
+            followLineLeft();
         end
          
         function fineAlign(obj)
