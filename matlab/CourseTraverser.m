@@ -38,25 +38,24 @@ classdef CourseTraverser < handle
         function traverse(obj)
             
 
-%             obj.lineFinder.findLine();
-%             
-%             obj.crossOverLine();
-%             
-%             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
-%             obj.lineFollower.followLineToInteraction();
-%             obj.backUpABit();
-%             
-%             obj.fullAlign();
-%             
-%             obj.doFirstInteraction();
+            obj.lineFinder.findLine();
             
-             
+            obj.crossOverLine();
+            
+            obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
+            obj.lineFollower.followLineToInteraction();
+            
+            obj.fullAlignLeft();
+            
+            obj.doFirstInteraction();
+            
             obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
             obj.lineFollower.followLineToInteraction();
             
             obj.fullAlignRight();
             
-            redline2();
+            followLine2();
+            redLine2();
 %               
 %               obj.skipInteraction();
 %               obj.lineFollower.followLineToInteraction();

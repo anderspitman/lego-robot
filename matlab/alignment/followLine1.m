@@ -24,7 +24,7 @@ while true
     fprintf('color: %d\n', brick.sensorValue(COLORPORT));
     
     %on line
-    if (brick.sensorValue(COLORPORT) == COLOR_LINE)
+    if (isOnLine(brick.sensorValue(COLORPORT)))
         %steer right
         brick.motorReverseSync(NXT.OUT_AC, 15,-20);
         

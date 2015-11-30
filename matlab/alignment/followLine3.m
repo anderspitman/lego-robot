@@ -23,7 +23,7 @@ while true
     if (brick.sensorValue(COLORPORT) == COLOR_BG)
         brick.motorForwardSync(NXT.OUT_AC,20,0);
          %steer left]
-    elseif (brick.sensorValue(COLORPORT) == COLOR_LINE)
+    elseif (isOnLine(brick.sensorValue(COLORPORT)))
        break
     end
 end
