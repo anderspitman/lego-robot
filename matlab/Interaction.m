@@ -8,6 +8,10 @@ classdef (Abstract) Interaction < handle
         function newInteraction = makeInteraction(type, robot)
             if strcmp(type, 'first')
                 newInteraction = FirstInteraction(robot);
+            elseif strcmp(type, 'second')
+                newInteraction = SecondInteraction(robot);
+            elseif strcmp(type, 'third')
+                newInteraction = ThirdInteraction(robot);
             end
         end
     end
