@@ -13,7 +13,7 @@ MOTORRIGHT = lego.NXT.OUT_C;
 
 Power = 40
 Seconds = .5
-NinetyDeg = .9
+NinetyDeg = .95
 %See Line
 %Back Up
 brick.motorReverseSync(NXT.OUT_AC, Power,0);
@@ -25,15 +25,15 @@ pause(NinetyDeg);
 brick.motorBrake(NXT.OUT_AC);
 % Go Forward
 brick.motorForwardSync(NXT.OUT_AC, Power,0);
-pause(Seconds*1.2);
+pause(Seconds*1.5);
 brick.motorBrake(NXT.OUT_AC);
 %Turn Left
 brick.motorForwardSync(NXT.OUT_AC, Power,90);
-pause(NinetyDeg);
+pause(NinetyDeg*1.);
 brick.motorBrake(NXT.OUT_AC);
 %Go Forward to Past Red Line
 brick.motorForwardSync(NXT.OUT_AC, Power,0);
-pause(Seconds*2.1);
+pause(Seconds*2.4);
 brick.motorBrake(NXT.OUT_AC);
 %Turn Left
 brick.motorForwardSync(NXT.OUT_AC, Power,90);
@@ -41,7 +41,7 @@ pause(NinetyDeg);
 brick.motorBrake(NXT.OUT_AC);
 %Go Forward
 brick.motorForwardSync(NXT.OUT_AC, Power,0);
-pause(Seconds*.5);
+pause(Seconds*1.1);
 brick.motorBrake(NXT.OUT_AC);
 brick.motorCoast(NXT.OUT_AC);
 end

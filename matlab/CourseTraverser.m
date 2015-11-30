@@ -53,12 +53,12 @@ classdef CourseTraverser < handle
             obj.lineFollower.followLineToInteraction();
             
             obj.fullAlignRight();
+            obj.doSecondInteraction();
+
+            obj.lineFollower.followLineToInteraction();
             
-            followLine2();
-            redLine2();
-%               
-%               obj.skipInteraction();
-%               obj.lineFollower.followLineToInteraction();
+            obj.fullAlignRight();
+            obj.lineFollower.followLineToInteraction();
 %               
 %              obj.skipInteraction();
 %              obj.robot.curveLeft(60, 50);
@@ -374,6 +374,15 @@ classdef CourseTraverser < handle
         
         function doFirstInteraction(obj)
             obj.firstInteraction.complete();
+        end
+        
+        function doSecondInteraction(obj)
+            followLine2();
+            redLine2();
+        end
+        
+        function doThirdInteraction(obj)
+            %redLine3();
         end
                 
         function crossOverLine(obj)

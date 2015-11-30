@@ -35,20 +35,14 @@ brick.motorRotate(NXT.OUT_B, armPowerSlow, 146);
 brick.motorBrake(NXT.OUT_B);
 pause(4);
 
-fprintf('\n Slightly back up to clear crate %d\n')
-brick.motorReverseSync(NXT.OUT_AC, MotorPower,0);
-pause(oneInch*1);
-brick.motorBrake(NXT.OUT_AC);
-pause(2)
-
 fprintf('\n Fine tune arm to touch floor %d\n\n')
-brick.motorRotate(NXT.OUT_B, armPowerSlow, 20);
+brick.motorRotate(NXT.OUT_B, armPowerSlow, 21);
 brick.motorBrake(NXT.OUT_B);
 pause(4);
 
 fprintf('\nDrive forward to set hook %d\n')
 brick.motorForwardSync(NXT.OUT_AC, MotorPower,0);
-pause(oneInch*2);
+pause(oneInch*1.8);
 brick.motorBrake(NXT.OUT_AC);
 
 pause(1);
@@ -74,7 +68,7 @@ pause(oneInch*2);
 brick.motorBrake(NXT.OUT_AC);
 
 fprintf('\nLower Crate %d\n')
-brick.motorRotate(NXT.OUT_B, armPowerSlow, 110);
+brick.motorRotate(NXT.OUT_B, armPowerSlow, 113);
 pause(2)
 
 fprintf('\nBack up to release crate %d\n')
@@ -84,7 +78,7 @@ brick.motorBrake(NXT.OUT_AC);
 pause(1)
 
 fprintf('\nRaise Arm Back Up %d\n')
-brick.motorRotate(NXT.OUT_B, armPowerFast, -180);
+brick.motorRotate(NXT.OUT_B, armPowerFast, -178);
 pause(4)
 brick.motorCoast(NXT.OUT_B);
 
