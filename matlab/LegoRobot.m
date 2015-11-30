@@ -84,6 +84,29 @@ classdef LegoRobot < Robot
                                    powerPercent);
         end
         
+        function straightForwardAngle(obj, angle, powerPercent)
+            obj.brick.motorRotateExt(LegoRobot.BOTH_MOTORS,...
+                                     powerPercent, angle,...
+                                     0, true, true);
+            obj.waitWhileMoving();                  
+        end
+        
+        function straightReverseAngle(obj, angle, powerPercent)
+            obj.brick.motorRotateExt(LegoRobot.BOTH_MOTORS,...
+                                     powerPercent, -angle,...
+                                     0, true, true);
+            obj.waitWhileMoving();
+        end
+        
+        function waitWhileMoving(obj)
+            runState = -1;
+            while runState ~= 0
+                outputState = obj.brick.getOutputState(Robot.BOTH_MOTORS);
+                runState = outputState.runState;
+                fprintf('runState: %f\n', runState);
+            end
+        end
+        
         function straightForwardRegulated(obj, powerPercent)
             obj.brick.motorForwardReg(LegoRobot.BOTH_MOTORS, powerPercent);
         end

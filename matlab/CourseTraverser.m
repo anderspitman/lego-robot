@@ -82,7 +82,8 @@ classdef CourseTraverser < handle
             
             done = false;
             while ~done
-                done = obj.alignIteration();
+                %done = obj.alignIteration();
+                done = obj.alignIterationReverse();
             end
             
             obj.robot.allStop();
@@ -118,6 +119,39 @@ classdef CourseTraverser < handle
             
             fprintf('Time: %f\n', time);
             
+        end
+        
+        function done = alignIterationReverse(obj)
+            positionState = Robot.STATE_OFF_LINE;
+            done = false;
+            
+            tic;
+            while positionState ~= Robot.STATE_ON_INTERACTION && ~done
+                disp('Back up');
+                obj.robot.motorReverseRegulated(LegoRobot.LEFT_MOTOR, 4);
+                obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, 4);
+                positionState = obj.robot.getPositionState();
+                time = toc;
+                if time > 5
+                    done = true;
+                end
+            end
+            
+            while positionState == Robot.STATE_ON_INTERACTION && ~done
+                disp('Move forward');
+                obj.robot.motorForwardRegulated(LegoRobot.RIGHT_MOTOR, 1);
+                obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, 1);
+                %obj.robot.straightForwardAngle(1, 20);
+                positionState = obj.robot.getPositionState();
+            end
+            
+            disp('Rotate');
+            obj.robot.motorForwardRegulated(LegoRobot.LEFT_MOTOR, 2);
+            obj.robot.motorReverseRegulated(LegoRobot.RIGHT_MOTOR, 2);
+            pause(1.5)
+            obj.robot.allStop();
+            
+            fprintf('Time: %f\n', time);
         end
         
         function skipFirstInteraction(obj)

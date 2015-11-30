@@ -9,8 +9,8 @@ lineFollower = LineFollower.makeLineFollower('back_and_rotate', robot);
 %robot.allStop();
 
 traverser = CourseTraverser(robot, lineFinder, lineFollower);
-%traverser.traverse();
-traverser.fineAlign();
+traverser.traverse();
+%traverser.fineAlign();
 
 
 
