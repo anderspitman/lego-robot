@@ -100,24 +100,26 @@ classdef Aligner < handle
             end
 
             while true
-                fprintf('color: %d\n', brick.sensorValue(COLORPORT));
+                %fprintf('color: %d\n', brick.sensorValue(COLORPORT));
+                
+                positionState = obj.robot.getPositionState();
                     
                 %on line
-                if (isOnLine(brick.sensorValue(COLORPORT)))
+                if positionState == Robot.STATE_ON_LINE
                     %steer right
                     brick.motorReverseSync(...
-                        NXT.OUT_AC,...
+                        lego.NXT.OUT_AC,...
                         powerSteerRight,...
                         turnPercentSteerRight);
 
-                elseif (brick.sensorValue(COLORPORT) == COLOR_BG)
+                elseif positionState == Robot.STATE_OFF_LINE
                     brick.motorForwardSync(...
-                        NXT.OUT_AC,...
+                        lego.NXT.OUT_AC,...
                         powerSteerLeft,...
                         turnPercentSteerLeft);
 
-                elseif (brick.sensorValue(COLORPORT) == COLOR_INTERACT)
-                    brick.motorBrake(NXT.OUT_AC);
+                elseif positionState == Robot.STATE_ON_INTERACTION
+                    brick.motorBrake(lego.NXT.OUT_AC);
                     break
                 end
             end

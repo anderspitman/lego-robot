@@ -122,18 +122,6 @@ classdef LegoRobot < Robot
             end
         end
         
-        function rotateAngleDegrees(obj, angleDegrees, powerPercent)
-            tireDegreesPerRobotDegrees = 2;
-            tireAngle = angleDegrees * tireDegreesPerRobotDegrees;
-            if angleDegrees >= 0
-                turnPercent = 10;
-            else
-                turnPercent = -10;
-            end
-            obj.brick.motorRotateExt(LegoRobot.BOTH_MOTORS,...
-                                     powerPercent, tireAngle,...
-                                     turnPercent, true, true);
-        end
         
         function rotateAngleTime(obj, angleDegrees)
             if angleDegrees >= 0
@@ -178,6 +166,53 @@ classdef LegoRobot < Robot
             obj.brick.motorRotateExt(...
                 LegoRobot.BOTH_MOTORS, powerPercent, degrees, 0, true,...
                 true);
+        end
+        
+        function forwardCentimeters(obj, distanceCentimeters,...
+                                    powerPercent)
+            degrees = distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER;
+            obj.brick.motorRotateExt(...
+                LegoRobot.BOTH_MOTORS, powerPercent, degrees, 0, true,...
+                true);
+            obj.waitUntilRotateFinished(LegoRobot.LEFT_MOTOR);
+        end
+        
+        function reverseCentimeters(obj, distanceCentimeters,...
+                                    powerPercent)
+            degrees = ...
+                -(distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER);
+            obj.brick.motorRotateExt(...
+                LegoRobot.BOTH_MOTORS, powerPercent, degrees, 0, true,...
+                true);
+            obj.waitUntilRotateFinished(LegoRobot.LEFT_MOTOR);
+        end
+        
+        function rotateAngleDegrees(obj, angleDegrees, powerPercent)
+            
+            if angleDegrees >= 0
+                turnPercent = 100;
+                tireDegreesPerRobotDegrees = 2.45;
+            else
+                turnPercent = -100;
+                tireDegreesPerRobotDegrees = 2.45;
+            end
+            
+            tireAngle = angleDegrees * tireDegreesPerRobotDegrees;
+            
+            obj.brick.motorRotateExt(LegoRobot.BOTH_MOTORS,...
+                                     powerPercent, tireAngle,...
+                                     turnPercent, true, true);
+            obj.waitUntilRotateFinished(LegoRobot.LEFT_MOTOR);
+        end
+
+        function waitUntilRotateFinished(obj, motor)            
+            regulationMode = -1;
+            
+            while regulationMode ~= 0
+                outputState = obj.brick.getOutputState(motor);
+                regulationMode = outputState.mode;
+                fprintf('mode: %d\n', regulationMode);
+            end
         end
         
         function reverseCentimetersDegrees(obj, distanceCentimeters,...

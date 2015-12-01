@@ -53,8 +53,7 @@ classdef CourseTraverser < handle
             obj.lineFollower.followLineToInteraction();
             
             obj.aligner.setSide(LineFollower.SIDE_LEFT);
-            %obj.aligner.fullAlign();
-            obj.fullAlignLeft();
+            obj.aligner.fullAlign();
             
             obj.doFirstInteraction();
             
@@ -62,123 +61,17 @@ classdef CourseTraverser < handle
             obj.lineFollower.followLineToInteraction();
             
             obj.aligner.setSide(LineFollower.SIDE_RIGHT);
-            %obj.aligner.fullAlign();
-            obj.fullAlignRight();
+            obj.aligner.fullAlign();
             obj.doSecondInteraction();
 
             obj.lineFollower.followLineToInteraction();
+            obj.aligner.fullAlign();
             obj.doThirdInteraction();
             
-            %obj.aligner.fullAlign();
-            obj.fullAlignRight();
-            obj.lineFollower.followLineToInteraction();
-
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToFinish();
              
             obj.robot.allStop();
-        end
-        
-        function backUpABitLeft(obj)
-            positionState = Robot.STATE_OFF_LINE;
-            
-            while positionState ~= Robot.STATE_ON_INTERACTION
-                obj.robot.straightReverse(20);
-                positionState = obj.robot.getPositionState();
-            end
-            
-            while positionState ~= Robot.STATE_OFF_LINE
-                obj.robot.straightReverse(30);
-                positionState = obj.robot.getPositionState();
-            end
-
-            obj.robot.straightReverse(60);
-            pause(.4);
-            obj.robot.allStop();
-            obj.robot.rotateAngleTime(-50);
-            
-            while positionState ~= Robot.STATE_ON_LINE
-                obj.robot.straightForward(30);
-                positionState = obj.robot.getPositionState();
-            end
-
-            obj.robot.allStop();
-        end
-        
-        function backUpABitRight(obj)
-            positionState = Robot.STATE_OFF_LINE;
-            
-            while positionState ~= Robot.STATE_ON_INTERACTION
-                obj.robot.straightReverse(20);
-                positionState = obj.robot.getPositionState();
-            end
-            
-            while positionState ~= Robot.STATE_OFF_LINE
-                obj.robot.straightReverse(30);
-                positionState = obj.robot.getPositionState();
-            end
-
-            obj.robot.straightReverse(60);
-            pause(.4);
-            obj.robot.allStop();
-            obj.robot.rotateAngleTime(50);
-            
-            while positionState ~= Robot.STATE_ON_LINE
-                obj.robot.straightForward(30);
-                positionState = obj.robot.getPositionState();
-            end
-
-            obj.robot.allStop();
-        end
-        
-        function fullAlignLeft(obj)
-            obj.backUpABitLeft();
-            obj.ryanAlignLeft();
-            obj.robot.straightReverse(25);
-            pause(2.0);
-            obj.robot.allStop();
-            obj.alignForSecondAlignPassLeft();
-            obj.ryanAlignLeft();
-        end
-        
-        function fullAlignRight(obj)
-            obj.backUpABitRight();
-            obj.ryanAlignRight();
-            obj.robot.straightReverse(25);
-            pause(2.0);
-            obj.robot.allStop();
-            obj.alignForSecondAlignPassRight();
-            obj.ryanAlignRight();
-        end
-        
-        function alignForSecondAlignPassLeft(obj)
-            obj.robot.leftMotorForward(30);
-            obj.robot.rightMotorForward(10);
-            positionState = obj.robot.getPositionState();
-            
-            while positionState ~= Robot.STATE_ON_LINE;
-                positionState = obj.robot.getPositionState();
-            end
-            obj.robot.allStop();
-        end
-        
-        function alignForSecondAlignPassRight(obj)
-            obj.robot.leftMotorForward(10);
-            obj.robot.rightMotorForward(30);
-            positionState = obj.robot.getPositionState();
-            
-            while positionState ~= Robot.STATE_ON_LINE;
-                positionState = obj.robot.getPositionState();
-            end
-            obj.robot.allStop();
-        end
-        
-        function ryanAlignLeft(obj)
-            followLineLeft();
-        end
-        
-        function ryanAlignRight(obj)
-            followLine1();
         end
         
         function doFirstInteraction(obj)
