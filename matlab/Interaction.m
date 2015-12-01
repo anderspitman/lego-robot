@@ -9,9 +9,10 @@ classdef (Abstract) Interaction < handle
             if strcmp(type, 'first')
                 newInteraction = FirstInteraction(robot);
             elseif strcmp(type, 'second')
-                newInteraction = SecondInteraction(robot);
+                %newInteraction = SecondInteraction(robot);
+                newInteraction = RotateSecondInteraction(robot);
             elseif strcmp(type, 'third')
-                newInteraction = ThirdInteraction(robot);
+                newInteraction = RotateThirdInteraction(robot);
             end
         end
     end

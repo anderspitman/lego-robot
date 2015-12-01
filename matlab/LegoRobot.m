@@ -168,6 +168,88 @@ classdef LegoRobot < Robot
                 true);
         end
         
+        
+        
+        function reverseCentimetersDegrees(obj, distanceCentimeters,...
+                                           powerPercent)
+            degrees = ...
+                -(distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER);
+            obj.brick.motorRotateExt(...
+                LegoRobot.BOTH_MOTORS, powerPercent, degrees, 0, true,...
+                true);
+        end
+        
+        function forwardCentimetersTime(obj, distanceCentimeters)
+            obj.straightForward(LegoRobot.MOTOR_POWER_PERCENT);
+            obj.pauseCentimetersTime(distanceCentimeters);
+        end
+        
+        function reverseCentimetersTime(obj, distanceCentimeters)
+            obj.straightBack(LegoRobot.MOTOR_POWER_PERCENT);
+            obj.pauseCentimetersTime(distanceCentimeters);
+        end
+        
+        function pauseCentimetersTime(obj, distanceCentimeters)
+            pauseTime = ...
+                distanceCentimeters / LegoRobot.CENTIMETERS_PER_SECOND;
+            pause(pauseTime);
+            obj.allStop();
+        end
+        
+        function leftMotorForward(obj, powerPercent)
+            obj.brick.motorForward(LegoRobot.LEFT_MOTOR,...
+                                   powerPercent);
+        end
+
+        function rightMotorForward(obj, powerPercent)
+            obj.brick.motorForward(LegoRobot.RIGHT_MOTOR,...
+                                   powerPercent);
+        end
+
+        function leftMotorReverse(obj, powerPercent)
+            obj.brick.motorReverse(LegoRobot.LEFT_MOTOR,...
+                                   powerPercent);
+        end
+
+        function rightMotorReverse(obj, powerPercent)
+            obj.brick.motorReverse(LegoRobot.RIGHT_MOTOR,...
+                                   powerPercent);
+        end
+        
+        function allStop(obj)
+            obj.brick.motorBrake(LegoRobot.BOTH_MOTORS);
+        end
+        
+        function rotateArm(obj, angleDegrees, powerPercent)
+            obj.brick.motorRotateExt(...
+                LegoRobot.ARM_MOTOR, powerPercent, angleDegrees, 0, ...
+                true, true);
+        end
+        
+        function battery = getBatteryLevel(obj)
+            battery = obj.brick.getBatteryLevel();
+        end
+        
+        function resetArm(obj)
+            tachoCount = obj.brick.getOutputState(LegoRobot.ARM_MOTOR).rotationCount;
+            fprintf('tachoCount: %f\n', tachoCount);
+            obj.rotateArmDegrees(tachoCount, 20);
+            fprintf('tachoCount: %f\n', tachoCount);
+        end
+        
+        function rotateArmDegrees(obj, angleDegrees, powerPercent)
+            obj.brick.motorRotateExt(...
+                LegoRobot.ARM_MOTOR, powerPercent, angleDegrees, 0,...
+                false, true);
+%             obj.brick.motorRotate(...
+%                 LegoRobot.ARM_MOTOR, powerPercent, angleDegrees);
+            obj.waitUntilRotateFinished(LegoRobot.ARM_MOTOR);
+        end
+
+        function breakArm(obj)
+            obj.brick.motorBrake(LegoRobot.ARM_MOTOR);
+        end
+        
         function forwardCentimeters(obj, distanceCentimeters,...
                                     powerPercent)
             degrees = distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER;
@@ -208,72 +290,13 @@ classdef LegoRobot < Robot
         function waitUntilRotateFinished(obj, motor)            
             regulationMode = -1;
             
+            disp('waiting');
+            tic;
             while regulationMode ~= 0
                 outputState = obj.brick.getOutputState(motor);
                 regulationMode = outputState.mode;
-                fprintf('mode: %d\n', regulationMode);
             end
-        end
-        
-        function reverseCentimetersDegrees(obj, distanceCentimeters,...
-                                           powerPercent)
-            degrees = ...
-                -(distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER);
-            obj.brick.motorRotateExt(...
-                LegoRobot.BOTH_MOTORS, powerPercent, degrees, 0, true,...
-                true);
-        end
-        
-        function forwardCentimetersTime(obj, distanceCentimeters)
-            obj.straightForward(LegoRobot.MOTOR_POWER_PERCENT);
-            obj.pauseCentimetersTime(distanceCentimeters);
-        end
-        
-        function reverseCentimetersTime(obj, distanceCentimeters)
-            obj.straightBack(LegoRobot.MOTOR_POWER_PERCENT);
-            obj.pauseCentimetersTime(distanceCentimeters);
-        end
-        
-        function pauseCentimetersTime(obj, distanceCentimeters)
-            pauseTime = ...
-                distanceCentimeters / LegoRobot.CENTIMETERS_PER_SECOND;
-            pause(pauseTime);
-            obj.allStop();
-        end
-        
-        
-        function leftMotorForward(obj, powerPercent)
-            obj.brick.motorForward(LegoRobot.LEFT_MOTOR,...
-                                   powerPercent);
-        end
-
-        function rightMotorForward(obj, powerPercent)
-            obj.brick.motorForward(LegoRobot.RIGHT_MOTOR,...
-                                   powerPercent);
-        end
-
-        function leftMotorReverse(obj, powerPercent)
-            obj.brick.motorReverse(LegoRobot.LEFT_MOTOR,...
-                                   powerPercent);
-        end
-
-        function rightMotorReverse(obj, powerPercent)
-            obj.brick.motorReverse(LegoRobot.RIGHT_MOTOR,...
-                                   powerPercent);
-        end
-        
-        function allStop(obj)
-            obj.brick.motorBrake(LegoRobot.BOTH_MOTORS);
-        end
-        
-        function rotateArm(obj, angleDegrees, powerPercent)
-            obj.brick.motorRotateExt(...
-                LegoRobot.ARM_MOTOR, powerPercent, angleDegrees, 0, ...
-                true, true);
-        end
-        
-        function battery = getBatteryLevel(obj)
-            battery = obj.brick.getBatteryLevel();
+            fprintf('done waiting: %f\n', toc);
         end
     end
 end
