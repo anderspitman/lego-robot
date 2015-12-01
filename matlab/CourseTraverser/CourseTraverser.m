@@ -30,17 +30,24 @@ classdef CourseTraverser < handle
     end
     
     methods
-        function obj = CourseTraverser(robot, lineFinder, lineFollower)
-            obj.robot = robot;
-            obj.lineFinder = lineFinder;
-            obj.lineFollower = lineFollower;
-            obj.aligner = Aligner.makeAligner(robot);
+        function obj = CourseTraverser()
+            addpath('robot');
+            addpath('line_finder');
+            addpath('line_follower');
+            addpath('aligner');
+            addpath('interaction'); 
+            
+            obj.robot = Robot.makeRobot('lego');
+            obj.lineFinder = LineFinder.makeLineFinder('basic', obj.robot);
+            obj.lineFollower = LineFollower.makeLineFollower(...
+                'back_and_rotate', obj.robot);
+            obj.aligner = Aligner.makeAligner(obj.robot);
             obj.firstInteraction = Interaction.makeInteraction('first',...
-                                                               robot);
+                                                               obj.robot);
             obj.secondInteraction = Interaction.makeInteraction('second',...
-                                                                robot);
+                                                                obj.robot);
             obj.thirdInteraction = Interaction.makeInteraction('third',...
-                                                                robot);
+                                                                obj.robot);
         end
         
         function traverse(obj)
