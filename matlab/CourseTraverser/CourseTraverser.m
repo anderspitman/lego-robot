@@ -8,6 +8,7 @@ classdef CourseTraverser < handle
         firstInteraction
         secondInteraction
         thirdInteraction
+        songPlayer
     end
 
     methods (Static)
@@ -22,7 +23,8 @@ classdef CourseTraverser < handle
             addpath('line_finder');
             addpath('line_follower');
             addpath('aligner');
-            addpath('interaction'); 
+            addpath('interaction');
+            addpath('song_player');
             
             obj.robot = Robot.makeRobot('lego');
             obj.lineFinder = LineFinder.makeLineFinder('basic', obj.robot);
@@ -35,6 +37,7 @@ classdef CourseTraverser < handle
                                                                 obj.robot);
             obj.thirdInteraction = Interaction.makeInteraction('third',...
                                                                 obj.robot);
+            obj.songPlayer = SongPlayer.makeSongPlayer();
         end
         
         function traverse(obj)
@@ -70,6 +73,10 @@ classdef CourseTraverser < handle
             
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToFinish();
+            
+            obj.songPlayer.playSong();
+            
+            obj.doDance();
              
             obj.robot.allStop();
         end
@@ -95,6 +102,21 @@ classdef CourseTraverser < handle
             end
             
             obj.robot.allStop();
+        end
+        
+        function doDance(obj)
+            obj.robot.reverseCentimeters(40, 100);
+            
+            for i = 1:10
+                obj.doWheely();
+            end
+        end
+        
+        function doWheely(obj)
+            obj.robot.curveRight(100, 50);
+            pause(.3);
+            obj.robot.straightReverse(100);
+            pause(.2);
         end
     end
 end
