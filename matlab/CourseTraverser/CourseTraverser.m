@@ -11,21 +11,8 @@ classdef CourseTraverser < handle
     end
 
     methods (Static)
-        function traverser = makeCourseTraverser(type)
-            if strcmp(type, 'normal')
-                robot = Robot.makeRobot('lego');
-                lineFinder = LineFinder.makeLineFinder('basic', robot);
-                lineFollower = LineFollower.makeLineFollower(...
-                    'back_and_rotate', robot);
-            elseif strcmp(type, 'mock')
-                robot = Robot.makeRobot('mock');
-                lineFinder = LineFinder.makeLineFinder('mock', robot);
-                lineFollower = LineFollower.makeLineFollower(...
-                    'mock', robot);
-            end
-
-            traverser = CourseTraverser(robot, lineFinder, lineFollower);
-
+        function traverser = makeCourseTraverser()
+            traverser = CourseTraverser();
         end
     end
     
