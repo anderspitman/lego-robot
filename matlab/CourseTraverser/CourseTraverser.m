@@ -78,7 +78,7 @@ classdef CourseTraverser < handle
             
             obj.doDance();
              
-            obj.robot.allStop();
+             obj.robot.allStop();
         end
         
         function doFirstInteraction(obj)
