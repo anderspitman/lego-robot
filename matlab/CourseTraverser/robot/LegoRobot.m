@@ -286,6 +286,14 @@ classdef LegoRobot < Robot
                                      turnPercent, true, true);
             obj.waitUntilRotateFinished(LegoRobot.LEFT_MOTOR);
         end
+        
+        function move(obj, distanceCentimeters, turnPercent, powerPercent)
+            degrees = distanceCentimeters * LegoRobot.DEGREES_PER_CENTIMETER;
+            obj.brick.motorRotateExt(LegoRobot.BOTH_MOTORS,...
+                                     powerPercent, degrees,...
+                                     turnPercent, true, true);
+            obj.waitUntilRotateFinished(LegoRobot.LEFT_MOTOR);
+        end
 
         function waitUntilRotateFinished(obj, motor)            
             regulationMode = -1;

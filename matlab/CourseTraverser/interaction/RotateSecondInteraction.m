@@ -5,8 +5,8 @@ classdef RotateSecondInteraction < Interaction
         end
 
         function complete(obj)
-            obj.robot.forwardCentimeters(8, 40);
-            obj.robot.rotateAngleDegrees(88, 60);
+            obj.robot.forwardCentimeters(7, 40);
+            obj.robot.rotateAngleDegrees(90, 60);
             obj.robot.reverseCentimeters(2, 40);
             
             obj.pickUpBox();
@@ -16,10 +16,10 @@ classdef RotateSecondInteraction < Interaction
         
         function pickUpBox(obj)
             obj.robot.rotateArmDegrees(90, 20);
-            pause(3);
+            % give hook time to stop swinging a little
+            pause(1);
             obj.robot.rotateArmDegrees(90, 5);
-            pause(2);
-            obj.robot.forwardCentimeters(5, 40);
+            obj.robot.forwardCentimeters(3, 40);
             obj.robot.rotateArmDegrees(-90, 25);
             obj.robot.breakArm();
         end
@@ -28,7 +28,7 @@ classdef RotateSecondInteraction < Interaction
             obj.robot.reverseCentimeters(10, 40);
             obj.robot.rotateAngleDegrees(90, 20);
             obj.robot.rotateArmDegrees(90, 5);
-            obj.robot.reverseCentimeters(5, 40);
+            obj.robot.reverseCentimeters(6, 60);
             obj.robot.rotateArmDegrees(-180, 20);
         end
         

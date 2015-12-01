@@ -5,31 +5,40 @@ classdef FirstInteraction < Interaction
         end
 
         function complete(obj)
-            obj.robot.forwardCentimetersTime(5);
-            obj.robot.curveRight(60, 60);
-            pause(7.2);
-            obj.robot.forwardCentimetersTime(20);
-            obj.robot.rotateAngleTime(-90);
-            obj.robot.forwardCentimetersTime(15);
-            
+            obj.moveALittleAwayFromFlag();
+            obj.doCircle();
+            obj.crossLine();
+            obj.backUpToLine();
+            obj.moveForwardOffLine();
+        end
+        
+        function moveALittleAwayFromFlag(obj)
+            obj.robot.reverseCentimeters(10, 60);
+            obj.robot.rotateAngleDegrees(20, 60);
+            obj.robot.forwardCentimeters(10, 60);
+            obj.robot.rotateAngleDegrees(-20, 60);
+        end
+        
+        function doCircle(obj)
+            obj.robot.move(140, -20, 60);
+        end
+        
+        function crossLine(obj)
+            obj.robot.forwardCentimeters(20, 60);
+            obj.robot.rotateAngleDegrees(-90, 60);
+            obj.robot.forwardCentimeters(15, 60);
+        end
+        
+        function backUpToLine(obj)
             obj.robot.straightReverse(30);
             positionState = Robot.STATE_OFF_LINE;
             while positionState ~= Robot.STATE_ON_LINE
                 positionState = obj.robot.getPositionState();
             end
-            
-            obj.robot.forwardCentimetersTime(5);
-            
-            obj.robot.allStop();
-            
-%             obj.robot.forwardCentimetersTime(20);
-%             obj.robot.rotateAngleTime(-90);
-%             obj.robot.forwardCentimetersTime(20);
-%             obj.robot.rotateAngleTime(-90);
-%             obj.robot.forwardCentimetersTime(30);
-%             obj.robot.rotateAngleTime(-90);
-%             obj.robot.forwardCentimetersTime(30);
-%             obj.robot.rotateAngleTime(-90);
+        end
+        
+        function moveForwardOffLine(obj)
+            obj.robot.forwardCentimeters(5, 60);
         end
     end
 end
