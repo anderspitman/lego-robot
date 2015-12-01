@@ -64,9 +64,15 @@ classdef CourseTraverser < handle
             obj.aligner.fullAlign();
             obj.doSecondInteraction();
 
+            obj.lineFollower.setSide(LineFollower.SIDE_RIGHT);
             obj.lineFollower.followLineToInteraction();
+             
+            obj.aligner.setSide(LineFollower.SIDE_RIGHT);
             obj.aligner.fullAlign();
             obj.doThirdInteraction();
+            
+            % hack to reset timer for detecting wall
+            tic;
             
             obj.lineFollower.setSide(LineFollower.SIDE_LEFT);
             obj.lineFollower.followLineToFinish();

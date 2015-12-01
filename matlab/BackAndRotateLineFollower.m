@@ -29,9 +29,11 @@ classdef BackAndRotateLineFollower < LineFollower
         end
         
         function followLineToFinish(obj)
+            disp('followLineToFinish');
             found = '';
             while ~strcmp(found, 'finish')
                 found = obj.iterate();
+                fprintf('found: %s\n', found);
             end
         end
 
@@ -64,7 +66,7 @@ classdef BackAndRotateLineFollower < LineFollower
         function hitWall = checkStateTransitionTime(obj, state)
             hitWall = false;
             runTime = toc;
-            if runTime > 10
+            if runTime > 5
                 hitWall = true;
             end
             %fprintf('State: %d, Prev: %d\n', state, obj.prevState);

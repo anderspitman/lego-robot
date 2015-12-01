@@ -88,15 +88,15 @@ classdef Aligner < handle
             brick = obj.robot.getBrick();
 
             if obj.side == LineFollower.SIDE_LEFT
-                powerSteerRight = 15
-                turnPercentSteerRight = 25
-                powerSteerLeft = 15
-                turnPercentSteerLeft = -5
+                powerAwayFromLine = 25;
+                turnPercentAwayFromLine = 25;
+                powerTowardLine = 25;
+                turnPercentTowardLine = -5;
             else
-                powerSteerRight = 15
-                turnPercentSteerRight = -20
-                powerSteerLeft = 20
-                turnPercentSteerLeft = 5
+                powerAwayFromLine = 25;
+                turnPercentAwayFromLine = -25;
+                powerTowardLine = 25;
+                turnPercentTowardLine = 5;
             end
 
             while true
@@ -104,19 +104,17 @@ classdef Aligner < handle
                 
                 positionState = obj.robot.getPositionState();
                     
-                %on line
                 if positionState == Robot.STATE_ON_LINE
-                    %steer right
                     brick.motorReverseSync(...
                         lego.NXT.OUT_AC,...
-                        powerSteerRight,...
-                        turnPercentSteerRight);
+                        powerAwayFromLine,...
+                        turnPercentAwayFromLine);
 
                 elseif positionState == Robot.STATE_OFF_LINE
                     brick.motorForwardSync(...
                         lego.NXT.OUT_AC,...
-                        powerSteerLeft,...
-                        turnPercentSteerLeft);
+                        powerTowardLine,...
+                        turnPercentTowardLine);
 
                 elseif positionState == Robot.STATE_ON_INTERACTION
                     brick.motorBrake(lego.NXT.OUT_AC);
