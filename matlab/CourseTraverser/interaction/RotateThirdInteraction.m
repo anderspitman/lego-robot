@@ -5,7 +5,7 @@ classdef RotateThirdInteraction < Interaction
         end
 
         function complete(obj)
-            obj.robot.forwardCentimeters(17, 40);
+            obj.robot.forwardCentimeters(16, 40);
             obj.robot.rotateAngleDegrees(90, 60);
             obj.robot.reverseCentimeters(7, 40);
             
@@ -14,7 +14,7 @@ classdef RotateThirdInteraction < Interaction
         
         function pickUpTrophy(obj)
             obj.robot.rotateArmDegrees(90, 20);
-            pause(3);
+            pause(1);
             obj.robot.rotateArmDegrees(65, 5);
             obj.robot.breakArm();
             pause(2);

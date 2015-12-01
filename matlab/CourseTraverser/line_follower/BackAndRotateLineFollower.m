@@ -35,6 +35,7 @@ classdef BackAndRotateLineFollower < LineFollower
                 found = obj.iterate();
                 fprintf('found: %s\n', found);
             end
+            obj.robot.allStop();
         end
 
         function found = iterate(obj)
